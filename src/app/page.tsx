@@ -36,7 +36,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-[#f8fafc]">
       <Header />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* ==================== HERO SECTION ==================== */}
         <section className="relative overflow-hidden">
           {/* Navy background accent */}

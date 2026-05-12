@@ -101,7 +101,7 @@ export default async function LearningArticlePage({ params }: PageProps) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
+        <main id="main-content" className="flex-1 flex items-center justify-center">
           <div className="text-center px-4">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-100 mb-6">
               <FileText className="w-10 h-10 text-slate-400" />
@@ -149,7 +149,7 @@ export default async function LearningArticlePage({ params }: PageProps) {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Back Navigation */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6">
           <Link

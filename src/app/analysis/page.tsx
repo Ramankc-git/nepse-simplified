@@ -123,7 +123,7 @@ export default function AnalysisPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Page Header */}
         <section className="bg-[#0a2141] py-16 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">

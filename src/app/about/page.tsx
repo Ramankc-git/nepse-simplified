@@ -23,7 +23,7 @@ export default function AboutPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero Section */}
         <section className="bg-[#0a2141] py-20 sm:py-28 relative overflow-hidden">
           {/* Decorative elements */}
@@ -276,9 +276,10 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto">
                 {/* Facebook */}
                 <a
-                  href="https://facebook.com"
+                  href="https://facebook.com/nepsesimplified"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Follow NEPSE SIMPLIFIED on Facebook"
                   className="group flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
                   <Facebook className="w-5 h-5 text-white/70 group-hover:text-green-400 transition-colors" />
@@ -289,9 +290,10 @@ export default function AboutPage() {
 
                 {/* TikTok */}
                 <a
-                  href="https://tiktok.com"
+                  href="https://tiktok.com/@nepsesimplified"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Follow NEPSE SIMPLIFIED on TikTok"
                   className="group flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
                   <svg
@@ -309,6 +311,7 @@ export default function AboutPage() {
                 {/* Email */}
                 <a
                   href="mailto:hello@nepsesimplified.com"
+                  aria-label="Email NEPSE SIMPLIFIED"
                   className="group flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
                   <Mail className="w-5 h-5 text-white/70 group-hover:text-green-400 transition-colors" />

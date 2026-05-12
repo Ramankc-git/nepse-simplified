@@ -49,7 +49,7 @@ export default async function IndividualNewsletterPage({ params }: PageProps) {
     return (
       <div className="min-h-screen flex flex-col bg-[#f8fafc]">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
+        <main id="main-content" className="flex-1 flex items-center justify-center">
           <div className="text-center space-y-6 px-6">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-red-50">
               <span className="text-4xl">📄</span>
@@ -115,8 +115,7 @@ export default async function IndividualNewsletterPage({ params }: PageProps) {
         </Link>
       </div>
 
-      {/* Newsletter Content */}
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <NewsletterTemplate data={newsletter as NewsletterData} />
 
         {/* Share Links */}

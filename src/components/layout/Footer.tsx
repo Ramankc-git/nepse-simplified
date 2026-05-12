@@ -3,22 +3,22 @@ import Link from "next/link";
 import Image from "next/image";
 
 const quickLinks = [
-  { label: "Latest Newsletters", href: "/#newsletters" },
-  { label: "Market Overview", href: "/#market-data" },
-  { label: "Beginner's Guide", href: "/#learning" },
-  { label: "Analysis Archive", href: "/#analysis" },
-  { label: "Upcoming Events", href: "/#events" },
+  { label: "Latest Newsletters", href: "/newsletters" },
+  { label: "Market Overview", href: "/market" },
+  { label: "Learning Hub", href: "/learning" },
+  { label: "Analysis & Reports", href: "/analysis" },
+  { label: "Upcoming Events", href: "/events" },
 ];
 
 const platforms = [
   { label: "Blog", href: "/" },
-  { label: "Facebook", href: "https://facebook.com", external: true },
-  { label: "TikTok", href: "https://tiktok.com", external: true },
+  { label: "Facebook", href: "https://facebook.com/nepsesimplified", external: true },
+  { label: "TikTok", href: "https://tiktok.com/@nepsesimplified", external: true },
 ];
 
 export function Footer() {
   return (
-    <footer className="bg-[#0a2141] text-white mt-auto">
+    <footer className="bg-[#0a2141] text-white mt-auto" role="contentinfo">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         {/* Main Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
@@ -44,6 +44,7 @@ export function Footer() {
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
+                        aria-hidden="true"
                       >
                         <path
                           strokeLinecap="round"
@@ -60,7 +61,7 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <nav aria-label="Footer quick links">
             <h4 className="brand-font text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
               Quick Links
             </h4>
@@ -76,7 +77,7 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* About Us */}
           <div>
@@ -92,11 +93,11 @@ export function Footer() {
 
           {/* Logo + Brand */}
           <div className="flex flex-col items-start col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-3 mb-4">
+            <Link href="/" className="flex items-center gap-3 mb-4" aria-label="NEPSE SIMPLIFIED Home">
               <div className="w-12 h-12 relative rounded-full overflow-hidden bg-white/10">
                 <Image
                   src="/logo.jpg"
-                  alt="NEPSE SIMPLIFIED"
+                  alt="NEPSE SIMPLIFIED logo"
                   fill
                   className="object-cover rounded-full"
                   sizes="48px"

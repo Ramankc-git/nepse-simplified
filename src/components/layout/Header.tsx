@@ -17,7 +17,7 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b-4 border-[#0a2141] shadow-premium">
+    <header className="sticky top-0 z-50 bg-white border-b-4 border-[#0a2141] shadow-premium" role="banner">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Top row: Logo + Brand + Mobile toggle */}
         <div className="flex items-center justify-between h-16 sm:h-20">
@@ -43,7 +43,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -88,7 +88,7 @@ export function Header() {
 
         {/* Mobile Nav Dropdown */}
         {mobileOpen && (
-          <nav className="lg:hidden pb-4 border-t border-slate-100 pt-3 animate-in fade-in slide-in-from-top-2 duration-200">
+          <nav className="lg:hidden pb-4 border-t border-slate-100 pt-3 animate-in fade-in slide-in-from-top-2 duration-200" aria-label="Mobile navigation">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link

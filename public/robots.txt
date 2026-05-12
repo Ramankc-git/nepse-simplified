@@ -3,6 +3,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://nepsesimplified.com/sitemap.xml
+# Crawl-delay to be respectful
+Crawl-delay: 1
 
-# NEPSE SIMPLIFIED - Nepal Stock Market Analysis Blog
+Sitemap: https://nepsesimplified.com/sitemap.xml

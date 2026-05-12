@@ -242,7 +242,7 @@ export default function EventsPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Hero Section */}
         <section className="bg-[#0a2141] text-white py-12 sm:py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">

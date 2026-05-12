@@ -16,7 +16,10 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "NEPSE SIMPLIFIED | Understand • Interpret • Invest Smart",
+  title: {
+    default: "NEPSE SIMPLIFIED | Understand • Interpret • Invest Smart",
+    template: "%s | NEPSE SIMPLIFIED",
+  },
   description:
     "Your go-to source for Nepal Stock Exchange (NEPSE) market analysis, tutorials, and investment insights. We simplify complex market data so you can invest smarter.",
   keywords: [
@@ -30,8 +33,17 @@ export const metadata: Metadata = {
     "market data",
     "trading",
     "portfolio",
+    "NEPSE tutorial",
+    "Nepal stock market guide",
+    "NEPSE analysis",
   ],
-  authors: [{ name: "NEPSE SIMPLIFIED" }],
+  authors: [{ name: "NEPSE SIMPLIFIED", url: "https://nepsesimplified.com" }],
+  creator: "NEPSE SIMPLIFIED",
+  publisher: "NEPSE SIMPLIFIED",
+  metadataBase: new URL("https://nepsesimplified.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "NEPSE SIMPLIFIED | Understand • Interpret • Invest Smart",
     description:
@@ -39,12 +51,24 @@ export const metadata: Metadata = {
     siteName: "NEPSE SIMPLIFIED",
     type: "website",
     locale: "en_US",
+    url: "https://nepsesimplified.com",
   },
   twitter: {
     card: "summary_large_image",
     title: "NEPSE SIMPLIFIED | Understand • Interpret • Invest Smart",
     description:
       "Your go-to source for Nepal Stock Exchange market analysis, tutorials, and investment insights.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -68,10 +92,24 @@ export default function RootLayout({
               url: "https://nepsesimplified.com",
               description:
                 "Your go-to source for Nepal Stock Exchange (NEPSE) market analysis, tutorials, and investment insights.",
-              potentialAction: {
-                "@type": "SearchAction",
-                target: "https://nepsesimplified.com/search?q={search_term_string}",
-                "query-input": "required name=search_term_string",
+            }),
+          }}
+        />
+        {/* JSON-LD Organization Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "NEPSE SIMPLIFIED",
+              url: "https://nepsesimplified.com",
+              logo: "https://nepsesimplified.com/logo.jpg",
+              sameAs: [],
+              contactPoint: {
+                "@type": "ContactPoint",
+                email: "hello@nepsesimplified.com",
+                contactType: "customer service",
               },
             }),
           }}
@@ -81,6 +119,13 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} font-sans antialiased`}
         style={{ backgroundColor: "#f8fafc" }}
       >
+        {/* Skip to main content - Accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#0a2141] focus:text-white focus:rounded-lg focus:text-sm focus:font-semibold focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         {children}
         <Toaster />
       </body>

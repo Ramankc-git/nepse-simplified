@@ -8,6 +8,7 @@ interface SubscribeFormProps {
 
 export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -22,7 +23,7 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, honeypot }),
       });
 
       const data = await res.json();
@@ -59,13 +60,30 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
         </div>
 
         {status === "success" ? (
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-4 text-center">
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-4 text-center" role="status">
             <p className="text-sm font-semibold text-green-700">{message}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* Honeypot - hidden from real users, traps bots */}
+            <div className="absolute -left-[9999px]" aria-hidden="true">
+              <label htmlFor="hp-hero">Website</label>
               <input
+                type="text"
+                id="hp-hero"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <label htmlFor="subscribe-hero-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="subscribe-hero-email"
                 type="email"
                 value={email}
                 onChange={(e) => {
@@ -74,11 +92,13 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
                 }}
                 placeholder="Enter your email address"
                 required
+                aria-describedby="subscribe-hero-hint"
                 className="flex-1 px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 transition-all"
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
+                aria-busy={status === "loading"}
                 className="px-6 py-3.5 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
               >
                 {status === "loading" ? (
@@ -87,6 +107,7 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
                       className="animate-spin h-4 w-4"
                       fill="none"
                       viewBox="0 0 24 24"
+                      aria-hidden="true"
                     >
                       <circle
                         className="opacity-25"
@@ -109,8 +130,11 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
                 )}
               </button>
             </div>
+            <p id="subscribe-hero-hint" className="sr-only">
+              We respect your privacy. Unsubscribe anytime.
+            </p>
             {status === "error" && (
-              <p className="text-xs text-red-500 text-center">{message}</p>
+              <p className="text-xs text-red-500 text-center" role="alert">{message}</p>
             )}
           </form>
         )}
@@ -123,10 +147,27 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
     return (
       <div className="max-w-sm w-full">
         {status === "success" ? (
-          <p className="text-xs text-green-400 font-semibold">{message}</p>
+          <p className="text-xs text-green-400 font-semibold" role="status">{message}</p>
         ) : (
           <form onSubmit={handleSubmit} className="flex gap-2">
+            {/* Honeypot */}
+            <div className="absolute -left-[9999px]" aria-hidden="true">
+              <label htmlFor="hp-footer">Website</label>
+              <input
+                type="text"
+                id="hp-footer"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+            <label htmlFor="subscribe-footer-email" className="sr-only">
+              Email address
+            </label>
             <input
+              id="subscribe-footer-email"
               type="email"
               value={email}
               onChange={(e) => {
@@ -140,6 +181,8 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
             <button
               type="submit"
               disabled={status === "loading"}
+              aria-busy={status === "loading"}
+              aria-label="Subscribe to newsletter"
               className="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl transition-colors disabled:opacity-50 shrink-0"
             >
               {status === "loading" ? "..." : "Join"}
@@ -147,7 +190,7 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
           </form>
         )}
         {status === "error" && (
-          <p className="text-xs text-red-400 mt-1">{message}</p>
+          <p className="text-xs text-red-400 mt-1" role="alert">{message}</p>
         )}
       </div>
     );
@@ -165,10 +208,27 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
         </div>
 
         {status === "success" ? (
-          <p className="text-sm font-semibold text-green-600">{message}</p>
+          <p className="text-sm font-semibold text-green-600" role="status">{message}</p>
         ) : (
           <form onSubmit={handleSubmit} className="flex gap-2 w-full sm:w-auto">
+            {/* Honeypot */}
+            <div className="absolute -left-[9999px]" aria-hidden="true">
+              <label htmlFor="hp-inline">Website</label>
+              <input
+                type="text"
+                id="hp-inline"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+            <label htmlFor="subscribe-inline-email" className="sr-only">
+              Email address
+            </label>
             <input
+              id="subscribe-inline-email"
               type="email"
               value={email}
               onChange={(e) => {
@@ -182,6 +242,8 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
             <button
               type="submit"
               disabled={status === "loading"}
+              aria-busy={status === "loading"}
+              aria-label="Subscribe to newsletter"
               className="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl transition-colors disabled:opacity-50 shrink-0"
             >
               {status === "loading" ? "..." : "Subscribe"}
@@ -190,7 +252,7 @@ export function SubscribeForm({ variant = "inline" }: SubscribeFormProps) {
         )}
       </div>
       {status === "error" && (
-        <p className="text-xs text-red-500 mt-2">{message}</p>
+        <p className="text-xs text-red-500 mt-2" role="alert">{message}</p>
       )}
     </div>
   );

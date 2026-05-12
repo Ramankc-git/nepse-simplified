@@ -9,7 +9,7 @@ export default function NewslettersPage() {
     <div className="min-h-screen flex flex-col bg-[#f8fafc]">
       <Header />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* Page Header */}
         <section className="bg-[#0a2141] rounded-b-[3rem] sm:rounded-b-[4rem]">
           <div className="max-w-6xl mx-auto px-6 pt-16 sm:pt-20 pb-12 sm:pb-16 text-center space-y-4">
