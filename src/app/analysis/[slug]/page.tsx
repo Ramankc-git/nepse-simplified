@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AdPlaceholder } from "@/components/common/AdPlaceholder";
+import { ContentRenderer } from "@/components/common/ContentRenderer";
+import ShareLinks from "@/components/common/ShareLinks";
 import { analysisArticles, getAnalysisArticle } from "@/lib/data";
 import {
   ArrowLeft,
@@ -55,6 +57,14 @@ function formatDate(dateStr: string): string {
   });
 }
 
+function collectMetrics(blocks: typeof article.content) {
+  return blocks.filter((b) => b.type === "metric") as {
+    type: "metric";
+    label: string;
+    value: string;
+  }[];
+}
+
 export default async function AnalysisArticlePage({ params }: PageProps) {
   const { slug } = await params;
   const article = getAnalysisArticle(slug);
@@ -72,7 +82,8 @@ export default async function AnalysisArticlePage({ params }: PageProps) {
               Article Not Found
             </h1>
             <p className="text-sm text-slate-500 mb-6">
-              The analysis article you&apos;re looking for doesn&apos;t exist or has been moved.
+              The analysis article you&apos;re looking for doesn&apos;t exist or
+              has been moved.
             </p>
             <Link
               href="/analysis"
@@ -87,6 +98,15 @@ export default async function AnalysisArticlePage({ params }: PageProps) {
       </div>
     );
   }
+
+  const metrics = collectMetrics(article.content);
+  const nonMetricBlocks = article.content.filter((b) => b.type !== "metric");
+
+  // Find the first heading block to render metrics after the first section
+  const firstHeadingIdx = nonMetricBlocks.findIndex((b) => b.type === "heading");
+  const secondHeadingIdx = nonMetricBlocks.findIndex(
+    (b, i) => i > firstHeadingIdx && b.type === "heading"
+  );
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -161,10 +181,9 @@ export default async function AnalysisArticlePage({ params }: PageProps) {
           <AdPlaceholder size="banner" />
         </div>
 
-        {/* Article Body Placeholder */}
+        {/* Article Body */}
         <article className="max-w-4xl mx-auto px-4 sm:px-6 pb-12">
           <div className="bg-white rounded-[2.5rem] shadow-premium border border-slate-100 overflow-hidden">
-            {/* Placeholder Content */}
             <div className="p-8 sm:p-12">
               {/* Summary highlight */}
               <div className="bg-green-50/60 border border-green-200/60 rounded-2xl p-6 mb-8">
@@ -176,86 +195,72 @@ export default async function AnalysisArticlePage({ params }: PageProps) {
                 </p>
               </div>
 
-              {/* Placeholder skeleton */}
-              <div className="space-y-6">
-                {/* Paragraph 1 */}
-                <div className="space-y-3">
-                  <div className="h-4 w-3/4 bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-5/6 bg-slate-100 rounded-lg" />
-                </div>
+              {/* Content before metrics */}
+              {firstHeadingIdx >= 0 && secondHeadingIdx > firstHeadingIdx && (
+                <>
+                  <ContentRenderer
+                    blocks={nonMetricBlocks.slice(0, secondHeadingIdx)}
+                  />
 
-                {/* Subheading */}
-                <div className="h-5 w-2/5 bg-slate-200 rounded-lg mt-8" />
+                  {/* Metrics grid after first section */}
+                  {metrics.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-8">
+                      {metrics.slice(0, 4).map((metric, i) => (
+                        <div
+                          key={i}
+                          className="bg-slate-50 rounded-xl border border-slate-200 p-4"
+                        >
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                            {metric.label}
+                          </p>
+                          <p className="text-lg font-bold text-[#0a2141]">
+                            {metric.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-                {/* Paragraph 2 */}
-                <div className="space-y-3">
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-4/5 bg-slate-100 rounded-lg" />
-                </div>
+                  {/* Remaining content */}
+                  {secondHeadingIdx < nonMetricBlocks.length && (
+                    <ContentRenderer
+                      blocks={nonMetricBlocks.slice(secondHeadingIdx)}
+                    />
+                  )}
+                </>
+              )}
 
-                {/* Chart placeholder */}
-                <div className="bg-slate-50 rounded-2xl border border-slate-200 h-48 sm:h-64 flex items-center justify-center">
-                  <div className="text-center">
-                    <TrendingUp className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                      Chart / Visual Analysis
-                    </p>
-                    <p className="text-xs text-slate-300 mt-1">
-                      Charts and data visualizations will appear here
-                    </p>
-                  </div>
-                </div>
+              {/* Fallback: render all content without metrics separation */}
+              {(firstHeadingIdx < 0 || secondHeadingIdx <= firstHeadingIdx) && (
+                <ContentRenderer blocks={nonMetricBlocks} />
+              )}
 
-                {/* Subheading */}
-                <div className="h-5 w-3/5 bg-slate-200 rounded-lg mt-8" />
-
-                {/* Paragraph 3 */}
-                <div className="space-y-3">
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-3/4 bg-slate-100 rounded-lg" />
-                </div>
-
-                {/* Key metrics placeholder */}
+              {/* Remaining metrics (if more than 4) */}
+              {metrics.length > 4 && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-8">
-                  {[1, 2, 3, 4].map((i) => (
+                  {metrics.slice(4).map((metric, i) => (
                     <div
-                      key={i}
-                      className="bg-slate-50 rounded-xl border border-slate-200 p-4 text-center"
+                      key={`extra-${i}`}
+                      className="bg-slate-50 rounded-xl border border-slate-200 p-4"
                     >
-                      <div className="h-3 w-12 bg-slate-200 rounded mx-auto mb-2" />
-                      <div className="h-6 w-16 bg-slate-300 rounded mx-auto" />
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                        {metric.label}
+                      </p>
+                      <p className="text-lg font-bold text-[#0a2141]">
+                        {metric.value}
+                      </p>
                     </div>
                   ))}
                 </div>
-
-                {/* Final paragraph */}
-                <div className="space-y-3">
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
-                  <div className="h-4 w-2/3 bg-slate-100 rounded-lg" />
-                </div>
-              </div>
-
-              {/* Coming soon notice */}
-              <div className="mt-10 pt-8 border-t border-slate-200 text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0a2141]/5 mb-3">
-                  <FileText className="w-4 h-4 text-[#0a2141]" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#0a2141]">
-                    Article In Progress
-                  </span>
-                </div>
-                <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-                  This analysis article is being prepared. The full article with detailed
-                  analysis, charts, and insights will be available here once the CMS is configured.
-                </p>
-              </div>
+              )}
             </div>
           </div>
         </article>
+
+        {/* Share Links */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 pb-8">
+          <ShareLinks title={article.title} />
+        </section>
 
         {/* Disclaimer */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 pb-16">
@@ -266,8 +271,9 @@ export default async function AnalysisArticlePage({ params }: PageProps) {
                 Disclaimer
               </p>
               <p className="text-sm text-amber-800/80 leading-relaxed">
-                All analysis is for educational purposes only. Not financial advice. Always do your
-                own research before making investment decisions.
+                All analysis is for educational purposes only. Not financial
+                advice. Always do your own research before making investment
+                decisions.
               </p>
             </div>
           </div>

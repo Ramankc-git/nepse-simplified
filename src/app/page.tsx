@@ -23,12 +23,13 @@ import {
   learningArticles,
   getLatestNewsletter,
   marketEvents,
+  getEventEffectiveStatus,
 } from "@/lib/data";
 
 export default function Home() {
   const latestNewsletter = getLatestNewsletter();
   const upcomingEvents = marketEvents
-    .filter((e) => e.status === "upcoming" || e.status === "open")
+    .filter((e) => getEventEffectiveStatus(e) !== "closed")
     .slice(0, 3);
 
   return (
@@ -469,77 +470,97 @@ export default function Home() {
               <div className="flex-1 h-px bg-slate-200 min-w-[2rem]" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-              {upcomingEvents.map((event) => {
-                const typeColors: Record<string, string> = {
-                  ipo: "bg-green-50 text-green-700 border-green-200",
-                  "right-share": "bg-blue-50 text-blue-700 border-blue-200",
-                  auction: "bg-orange-50 text-orange-700 border-orange-200",
-                  dividend: "bg-emerald-50 text-emerald-700 border-emerald-200",
-                  agm: "bg-purple-50 text-purple-700 border-purple-200",
-                  policy: "bg-slate-100 text-slate-700 border-slate-200",
-                };
-                const typeLabels: Record<string, string> = {
-                  ipo: "IPO",
-                  "right-share": "Right Share",
-                  auction: "Auction",
-                  dividend: "Dividend",
-                  agm: "AGM",
-                  policy: "Policy",
-                };
-                const statusColors: Record<string, string> = {
-                  upcoming: "bg-yellow-100 text-yellow-700",
-                  open: "bg-green-100 text-green-700",
-                  closed: "bg-slate-100 text-slate-500",
-                };
+            {upcomingEvents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                {upcomingEvents.map((event) => {
+                  const effectiveStatus = getEventEffectiveStatus(event);
+                  const typeColors: Record<string, string> = {
+                    ipo: "bg-green-50 text-green-700 border-green-200",
+                    "right-share": "bg-blue-50 text-blue-700 border-blue-200",
+                    auction: "bg-orange-50 text-orange-700 border-orange-200",
+                    dividend: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                    agm: "bg-purple-50 text-purple-700 border-purple-200",
+                    policy: "bg-slate-100 text-slate-700 border-slate-200",
+                  };
+                  const typeLabels: Record<string, string> = {
+                    ipo: "IPO",
+                    "right-share": "Right Share",
+                    auction: "Auction",
+                    dividend: "Dividend",
+                    agm: "AGM",
+                    policy: "Policy",
+                  };
+                  const statusColors: Record<string, string> = {
+                    upcoming: "bg-yellow-100 text-yellow-700",
+                    open: "bg-green-100 text-green-700",
+                    closed: "bg-slate-100 text-slate-500",
+                  };
 
-                return (
-                  <div
-                    key={event.id}
-                    className="bg-white rounded-[2rem] shadow-premium p-6 space-y-4 hover:shadow-lg transition-shadow"
-                  >
-                    {/* Badges */}
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] uppercase font-black tracking-widest border ${
-                          typeColors[event.type] || typeColors.policy
-                        }`}
-                      >
-                        {typeLabels[event.type] || event.type}
-                      </span>
-                      <span
-                        className={`inline-flex px-2 py-0.5 rounded-full text-[9px] uppercase font-bold tracking-wider ${
-                          statusColors[event.status]
-                        }`}
-                      >
-                        {event.status}
-                      </span>
+                  return (
+                    <div
+                      key={event.id}
+                      className="bg-white rounded-[2rem] shadow-premium p-6 space-y-4 hover:shadow-lg transition-shadow"
+                    >
+                      {/* Badges */}
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] uppercase font-black tracking-widest border ${
+                            typeColors[event.type] || typeColors.policy
+                          }`}
+                        >
+                          {typeLabels[event.type] || event.type}
+                        </span>
+                        <span
+                          className={`inline-flex px-2 py-0.5 rounded-full text-[9px] uppercase font-bold tracking-wider ${
+                            statusColors[effectiveStatus]
+                          }`}
+                        >
+                          {effectiveStatus}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h4 className="font-heading text-base font-bold text-[#0a2141] leading-snug">
+                        {event.title}
+                      </h4>
+
+                      {/* Company */}
+                      <p className="text-xs text-slate-500">{event.company}</p>
+
+                      {/* Date */}
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {event.startDate}
+                        {event.startDate !== event.endDate &&
+                          ` — ${event.endDate}`}
+                      </div>
+
+                      {/* Details */}
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        {event.details}
+                      </p>
                     </div>
-
-                    {/* Title */}
-                    <h4 className="font-heading text-base font-bold text-[#0a2141] leading-snug">
-                      {event.title}
-                    </h4>
-
-                    {/* Company */}
-                    <p className="text-xs text-slate-500">{event.company}</p>
-
-                    {/* Date */}
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {event.startDate}
-                      {event.startDate !== event.endDate &&
-                        ` — ${event.endDate}`}
-                    </div>
-
-                    {/* Details */}
-                    <p className="text-sm text-slate-500 leading-relaxed">
-                      {event.details}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-white rounded-[2rem] shadow-premium p-8 text-center">
+                <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                <p className="text-sm font-semibold text-slate-600 mb-1">
+                  No upcoming events at this time.
+                </p>
+                <p className="text-xs text-slate-400 mb-4">
+                  Check back soon or browse all events.
+                </p>
+                <Link
+                  href="/events"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#0a2141] hover:text-green-600 transition-colors group"
+                >
+                  Browse All Events
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+              </div>
+            )}
 
             <div className="mt-6 text-center">
               <Link

@@ -8,6 +8,7 @@ import NewsletterTemplate, {
   type NewsletterData,
 } from "@/components/newsletter/NewsletterTemplate";
 import { getNewsletter, newsletters } from "@/lib/data";
+import ShareLinks from "@/components/common/ShareLinks";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -117,6 +118,13 @@ export default async function IndividualNewsletterPage({ params }: PageProps) {
       {/* Newsletter Content */}
       <main className="flex-1">
         <NewsletterTemplate data={newsletter as NewsletterData} />
+
+        {/* Share Links */}
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <ShareLinks
+            title={`${newsletter.volume} — NEPSE SIMPLIFIED Weekly Newsletter`}
+          />
+        </div>
       </main>
 
       <Footer />

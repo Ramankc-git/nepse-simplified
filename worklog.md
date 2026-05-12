@@ -165,3 +165,105 @@ Stage Summary:
 - PDF download works correctly (fixed SSR error with dynamic import)
 - All newsletter section titles consistent between web and PDF versions
 - Lint passes clean, all routes verified 200
+
+---
+Task ID: 3a, 3b
+Agent: full-stack-developer
+Task: Create reusable ShareLinks component and add to all blog detail pages
+
+Work Log:
+- Created `src/components/common/ShareLinks.tsx` — a "use client" component with:
+  - Props: `{ title, url?, description? }` (defaults url to window.location.href)
+  - 5 social share buttons: Facebook, Twitter/X, LinkedIn, WhatsApp, Telegram
+  - Copy Link button with clipboard API + fallback, "Copied!" feedback state
+  - Each platform has correct share URL with encoded title + URL
+  - Platform-specific color schemes (blue-600, slate-900, blue-700, green-600, sky-500)
+  - Copy Link: slate-100 default, green-50 with check icon when copied
+  - Responsive layout: flex-wrap for mobile (2-3 rows), single row on desktop
+  - Share2 icon label, text-[10px] uppercase tracking-widest label style
+  - White bg, rounded-2xl, border-slate-100, shadow-premium container
+  - Hover scale animations on all buttons
+- Added ShareLinks to newsletter detail page (`/newsletters/[slug]/page.tsx`):
+  - Placed between NewsletterTemplate and Footer
+  - Title: `{newsletter.volume} — NEPSE SIMPLIFIED Weekly Newsletter`
+- Added ShareLinks to analysis article detail page (`/analysis/[slug]/page.tsx`):
+  - Placed after article body, before disclaimer
+  - Title: `article.title`
+- Added ShareLinks to learning article detail page (`/learning/[slug]/page.tsx`):
+  - Placed after article body, before disclaimer
+  - Title: `article.title`
+- Ran lint: 0 errors
+- Verified all routes return 200 in dev log
+
+Stage Summary:
+- 1 new component created: ShareLinks.tsx
+- 3 pages updated with ShareLinks integration
+- All share buttons open platform-specific share dialogs with pre-filled URL and title
+- Copy Link uses Clipboard API with legacy fallback
+- Design matches NEPSE SIMPLIFIED design system (navy primary, rounded cards, shadow-premium)
+- Lint: 0 errors, all routes verified 200
+
+---
+Task ID: 4
+Agent: full-stack-developer
+Task: Implement auto-archiving for upcoming events
+
+Work Log:
+- Added `getEventEffectiveStatus(event)` to `src/lib/data.ts` — computes real-time status from startDate/endDate vs current date
+- Added `getActiveEvents()` and `getArchivedEvents()` helper functions to data.ts
+- Added 3 past events to marketEvents data for archiving demonstration (Agricultural Dev Bank IPO, NIC Right Share, Neco Insurance Auction)
+- Updated events page (`/events/page.tsx`):
+  - Now computes effective status dynamically using `getEventEffectiveStatus` instead of static `event.status`
+  - Added "Archive" filter tab with Archive icon and count badge
+  - Active events show with full styling (shadow-premium, vibrant badges)
+  - Archived events display with muted appearance (opacity-70, grayed-out badges, slate-50 background)
+  - Visual separator (horizontal line with "Archived" pill) between active and archived sections
+  - Archive-only view with dedicated section header and count
+  - Empty state messages for no events/no active events per filter
+- Updated homepage (`/page.tsx`):
+  - Changed event filtering from static `e.status` to `getEventEffectiveStatus(e) !== "closed"`
+  - Status badges now use computed effective status instead of static data
+  - Added empty state with calendar icon + "No upcoming events at this time" message + "Browse All Events" link
+- Ran lint: 0 errors
+- Verified dev server compiling cleanly
+
+Stage Summary:
+- Events auto-archive when their endDate passes (no manual status updates needed)
+- 3 files modified: data.ts, events/page.tsx, page.tsx
+- Events page shows active events first, archived below with visual separator
+- "Archive" filter tab shows only closed/past events
+- Homepage dynamically shows only active events with graceful empty state
+- Lint: 0 errors
+
+---
+Task ID: 2a, 2b
+Agent: full-stack-developer
+Task: Create full blog content for all analysis and learning articles
+
+Work Log:
+- Added `ContentBlock` union type to `src/lib/data.ts` with 7 block types: paragraph, heading, subheading, highlight, list, metric, tip
+- Added `content: ContentBlock[]` field to both `AnalysisArticle` and `LearningArticle` interfaces
+- Wrote full detailed content for 4 analysis articles (~800-1200 words each):
+  1. Nabil Bank Q4 FY2082/83 deep dive (financial performance, NPL, CASA, digital, valuation, thesis)
+  2. Nepal Banking Sector Outlook 2026 (credit growth, NPL crisis, rates, best-positioned banks, strategy)
+  3. Hydropower Sector analysis (government push, key stocks, PPA, project delays, risks)
+  4. NIC Asia Bank turnaround analysis (background, performance, what went wrong, recovery signs, verdict)
+- Wrote full detailed content for 5 learning articles (~600-1000 words each):
+  1. How to Read a Balance Sheet (assets, liabilities, equity, ratios, NEPSE example)
+  2. P/E Ratio Explained (calculation, interpretation, sector P/E, common mistakes)
+  3. Step-by-Step Guide to Applying for IPOs in Nepal (DEMAT, Mero Share, application, allotment)
+  4. Technical Analysis 101 (support/resistance, trend lines, MAs, chart patterns, volume)
+  5. Book Value vs. Market Price (P/B ratio, when cheap is a bargain vs value trap, NEPSE examples)
+- Created `src/components/common/ContentRenderer.tsx` — shared component that renders ContentBlock arrays with styled UI for each block type
+- Updated `src/app/analysis/[slug]/page.tsx` to render actual article content instead of skeleton placeholders
+- Updated `src/app/learning/[slug]/page.tsx` to render actual guide content instead of skeleton placeholders
+- Both detail pages extract metrics from content and display them in a dedicated grid after the first section
+- Ran lint: 0 errors
+- Verified all 9 article pages return 200
+
+Stage Summary:
+- 4 files modified/created: data.ts, ContentRenderer.tsx, analysis/[slug]/page.tsx, learning/[slug]/page.tsx
+- All 9 articles now have substantive, educational content with NEPSE-specific context
+- Content includes financial metrics, highlights, bullet lists, pro tips, and real company data
+- Skeleton placeholders completely replaced with rendered ContentBlock content
+- Lint: 0 errors, all routes verified 200
