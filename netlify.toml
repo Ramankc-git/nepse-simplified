@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+
+# Netlify Identity - required for Decap CMS git-gateway backend
+[[redirects]]
+  from = "/cms"
+  to = "/admin/"
+  status = 200

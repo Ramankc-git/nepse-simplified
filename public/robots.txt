@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://nepsesimplified.com/sitemap.xml
+
+# NEPSE SIMPLIFIED - Nepal Stock Market Analysis Blog
