@@ -233,13 +233,16 @@ export default function MarketPage() {
 
                 {/* Manual Data Notice */}
                 {data.source === 'manual' && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
                     <div className="flex items-start gap-3">
                       <Zap className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-semibold text-amber-800">Sample Data Mode</p>
-                        <p className="text-sm text-amber-700 mt-0.5">
-                          Showing sample data. API endpoints will be configured for live data feed.
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-amber-800">Static Data — Updated Weekly</p>
+                        <p className="text-sm text-amber-700 mt-1 leading-relaxed">
+                          NEPSE&apos;s official API requires authentication and is not publicly accessible for free.
+                          Market data shown below is updated manually each week. To update the data, edit
+                          the <code className="px-1.5 py-0.5 bg-amber-100 rounded text-xs font-mono">src/lib/nepse-api.ts</code> file
+                          in the codebase and redeploy.
                         </p>
                       </div>
                     </div>

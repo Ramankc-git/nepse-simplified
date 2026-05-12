@@ -1,5 +1,16 @@
-// NEPSE API integration with fallback to manual data
-// Pulls from free NEPSE APIs and provides timestamp info
+// NEPSE Market Data Integration
+// ========================================
+// NEPSE's official API (nepalstock.com) requires authentication — it returns 401 for unauthenticated requests.
+// Third-party APIs (nepsealpha.com, heroku apps) are behind Cloudflare or offline.
+//
+// CURRENT STATE: This module serves static/sample data instantly.
+//
+// HOW TO CONNECT A REAL DATA SOURCE:
+// 1. NEPSE Official: Contact NEPSE for API access, or use browser cookies via a proxy.
+// 2. Third-party: Use services like Sharesansar API (paid) or set up a CORS proxy.
+// 3. Custom: Add your own API URL to the NEPSE_APIS array below.
+//
+// To update data manually, edit the getSampleMarketData() function below.
 
 export interface NepseIndex {
   value: number;
@@ -39,34 +50,36 @@ export interface MarketDataResult {
   dataSource: string;
 }
 
-// Known free NEPSE data sources
-const NEPSE_APIS = [
-  {
-    name: "Nepal Stock Exchange Official",
-    url: "https://www.nepalstock.com/api/nots/market-summary",
-  },
-  {
-    name: "NEPSE Data API",
-    url: "https://data.nepalstock.com/api/v1/market-summary",
-  },
+// ============================================================
+// API Sources — add your working API endpoint here
+// ============================================================
+// If you get access to a working NEPSE data API, add it below.
+// The fetcher will try each endpoint with a short timeout (3s).
+const NEPSE_APIS: { name: string; url: string }[] = [
+  // Example: { name: "My NEPSE Proxy", url: "https://my-proxy.example.com/api/nepse" },
+  // NEPSE official API requires auth — uncomment if you have credentials:
+  // { name: "NEPSE Official", url: "https://www.nepalstock.com/api/nots/market-summary" },
 ];
 
-// Manual fallback data (used when API fails)
-function getManualFallbackData(): MarketDataResult {
+// ============================================================
+// Editable Sample Data — update these values manually
+// This data is shown on the Market Data page when no API is connected.
+// ============================================================
+function getSampleMarketData(): MarketDataResult {
   return {
-    timestamp: new Date().toISOString(),
+    timestamp: "2026-05-12T10:45:00+05:45", // Update to latest trading session timestamp
     nepseIndex: {
       value: 2768.41,
       change: 22.76,
       changePercent: 0.83,
     },
-    turnover: 19.45,
+    turnover: 19.45, // in Billions (Rs.)
     turnoverChange: 13.6,
     topGainers: [
       { symbol: "JHPL", name: "Jhapa Power", ltp: 425.0, change: 65.0, changePercent: 18.06, open: 360.0, high: 430.0, low: 358.0, volume: 125000, turnover: 53125000 },
       { symbol: "SOAL", name: "Siddhartha Oxygen", ltp: 875.0, change: 52.0, changePercent: 6.32, open: 823.0, high: 882.0, low: 820.0, volume: 45000, turnover: 39375000 },
       { symbol: "LSCF", name: "Life Insurance Corp", ltp: 680.0, change: 38.5, changePercent: 6.0, open: 641.5, high: 685.0, low: 638.0, volume: 28000, turnover: 19040000 },
-      { symbol: "CBBL", name: "Citizen Bank", ltp: 342.0, change: 18.0, changePercent: 5.56, open: 324.0, high: 345.0, low: 322.0, volume: 85000, turnover: 29070000 },
+      { symbol: "CBBL", name: "Citizen Bank Int'l", ltp: 342.0, change: 18.0, changePercent: 5.56, open: 324.0, high: 345.0, low: 322.0, volume: 85000, turnover: 29070000 },
       { symbol: "PBL", name: "Prabhu Bank", ltp: 148.5, change: 7.5, changePercent: 5.32, open: 141.0, high: 150.0, low: 140.0, volume: 220000, turnover: 32670000 },
     ],
     topLosers: [
@@ -91,17 +104,22 @@ function getManualFallbackData(): MarketDataResult {
       { name: "Hotels & Tourism", index: 1890.12, change: 23.45, changePercent: 1.26 },
       { name: "Others", index: 567.89, change: -5.67, changePercent: -0.99 },
     ],
-    source: "manual",
-    dataSource: "Sample data — update manually or configure API endpoint",
+    source: "manual" as const,
+    dataSource: "Sample data — edit src/lib/nepse-api.ts to update, or add an API endpoint for live data",
   };
 }
 
 export async function fetchMarketData(): Promise<MarketDataResult> {
-  // Try each API source
+  // If no APIs are configured, return sample data instantly (no waiting)
+  if (NEPSE_APIS.length === 0) {
+    return getSampleMarketData();
+  }
+
+  // Try each configured API source with a short timeout
   for (const api of NEPSE_APIS) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
 
       const response = await fetch(api.url, {
         signal: controller.signal,
@@ -118,8 +136,6 @@ export async function fetchMarketData(): Promise<MarketDataResult> {
 
       const data = await response.json();
 
-      // Process the response — adapt based on actual API structure
-      // This is a generic handler that will be updated when specific API is confirmed
       if (data && (data.index || data.nepseIndex)) {
         return {
           timestamp: new Date().toISOString(),
@@ -168,22 +184,15 @@ export async function fetchMarketData(): Promise<MarketDataResult> {
               changePercent: Number(s.changePercent || 0),
             })
           ),
-          source: "api",
+          source: "api" as const,
           dataSource: api.name,
         };
       }
     } catch {
-      // API failed, try next
       continue;
     }
   }
 
-  // All APIs failed — return manual fallback with clear indication
-  const fallback = getManualFallbackData();
-  return {
-    ...fallback,
-    source: "manual",
-    dataSource:
-      "APIs unavailable — showing sample data. Update manually or check API configuration.",
-  };
+  // All APIs failed — return sample data instantly
+  return getSampleMarketData();
 }
