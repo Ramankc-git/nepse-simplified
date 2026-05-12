@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight, Download, Share2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import NewsletterTemplate, {
@@ -101,6 +101,17 @@ export default async function IndividualNewsletterPage({ params }: PageProps) {
             </span>
           </nav>
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-end gap-3">
+        <Link
+          href={`/newsletters/${slug}/pdf`}
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-full transition-colors shadow-lg"
+        >
+          <Download className="w-3.5 h-3.5" />
+          Download PDF
+        </Link>
       </div>
 
       {/* Newsletter Content */}

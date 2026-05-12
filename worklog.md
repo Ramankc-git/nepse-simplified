@@ -112,3 +112,33 @@ Stage Summary:
 - RSS feed, sitemap config, robots.txt for SEO
 - Netlify deployment config ready
 - All navigation links point to correct routes
+
+---
+Task ID: 15-18
+Agent: Main Agent
+Task: Build PDF-generating newsletter component
+
+Work Log:
+- Verified html2pdf.js already installed in package.json
+- Created `/src/components/pdf/NewsletterPDF.tsx` — a 'use client' component that:
+  - Renders the COMPLETE newsletter as a self-contained HTML layout using ONLY inline styles (no Tailwind)
+  - Includes all 7 sections from the user's original design (Header, Market Snapshot, PESTLE Analysis, Smart Money Watchlist, Company Analysis, Learner's Insight, Summary, Footer)
+  - Combines Watchlist + Events into a single two-column "Smart Money Watchlist" section matching the original design
+  - Includes diagonal watermark overlay ("NEPSE SIMPLIFIED" at -45deg rotation, rgba(10,33,65,0.03))
+  - Has a fixed floating "Download PDF" button at bottom-right (not printed)
+  - Uses html2pdf.js to generate A4 PDF with 0 margins, scale 2, JPEG quality 1.0
+  - Filename: NEPSE-SIMPLIFIED-{volume}.pdf
+- Created `/src/app/newsletters/[slug]/pdf/page.tsx` — dedicated page that:
+  - Renders only the NewsletterPDF component (no main Header/Footer)
+  - Has minimal top bar with "Back to Newsletter" link
+  - Includes generateMetadata and generateStaticParams
+  - Shows a not-found state with link back to /newsletters
+- Uses exact design tokens: navy #0a2141, green-600, red-500, slate shades
+- Uses unicode icons: ✓ ✗ ▶ ▲ ▼ ⚠ 📅 🏛️ for PDF compatibility
+- Ran lint: 0 errors
+
+Stage Summary:
+- 2 files created: NewsletterPDF.tsx (500+ lines of inline-styled newsletter) + pdf/page.tsx
+- PDF output matches the user's original HTML newsletter design with watermark
+- All styles are inline for html2pdf.js compatibility
+- Pages accessible at /newsletters/{slug}/pdf
