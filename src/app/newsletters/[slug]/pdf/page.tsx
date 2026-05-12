@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import NewsletterPDF from '@/components/pdf/NewsletterPDF';
+import PDFWrapper from '@/components/pdf/PDFWrapper';
 import { getNewsletter, newsletters } from '@/lib/data';
 
 interface PageProps {
@@ -110,7 +110,7 @@ export default async function NewsletterPDFPage({ params }: PageProps) {
       </div>
 
       {/* The newsletter PDF component renders its own header/footer */}
-      <NewsletterPDF data={newsletter} />
+      <PDFWrapper data={newsletter} />
     </div>
   );
 }

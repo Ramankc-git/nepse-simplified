@@ -26,7 +26,7 @@ export default function Watchlist({ stocks }: WatchlistProps) {
         </span>
         <div className="flex items-center gap-3 flex-1">
           <h2 className="font-heading text-sm font-black tracking-wider text-[#0a2141] uppercase">
-            Stock Watchlist
+            Smart Money Watchlist
           </h2>
           <div className="flex-1 h-px bg-slate-200" />
         </div>

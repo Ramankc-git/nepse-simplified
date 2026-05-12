@@ -91,7 +91,27 @@ interface NewsletterTemplateProps {
 
 export default function NewsletterTemplate({ data }: NewsletterTemplateProps) {
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen bg-[#f8fafc] relative">
+      {/* Watermark Overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none z-50 overflow-hidden"
+        aria-hidden="true"
+      >
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-45 whitespace-nowrap"
+          style={{
+            fontSize: 'clamp(3rem, 8vw, 7rem)',
+            fontWeight: 900,
+            color: 'rgba(10, 33, 65, 0.025)',
+            letterSpacing: '0.5em',
+            fontFamily: 'Outfit, sans-serif',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+          }}
+        >
+          NEPSE SIMPLIFIED
+        </div>
+      </div>
       {/* Sticky Header */}
       <NewsletterHeader
         volume={data.volume}

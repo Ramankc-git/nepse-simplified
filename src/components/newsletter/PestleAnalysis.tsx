@@ -61,7 +61,7 @@ export default function PestleAnalysis({
         </span>
         <div className="flex items-center gap-3 flex-1">
           <h2 className="font-heading text-sm font-black tracking-wider text-[#0a2141] uppercase">
-            PESTLE Analysis
+            Market Sentiment (PESTLE Analysis)
           </h2>
           <div className="flex-1 h-px bg-slate-200" />
         </div>
@@ -93,7 +93,7 @@ export default function PestleAnalysis({
         <div className="bg-red-50/50 border border-red-100 rounded-3xl p-6 flex flex-col h-full">
           <ColumnHeader
             icon={X}
-            label="Risks"
+            label="Threats"
             iconColor="text-red-600"
             iconBg="bg-red-600/10"
           />
@@ -113,7 +113,7 @@ export default function PestleAnalysis({
         <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex flex-col h-full">
           <ColumnHeader
             icon={Eye}
-            label="Strategic Focus"
+            label="Strategies for Investors"
             iconColor="text-blue-900"
             iconBg="bg-blue-900/10"
           />

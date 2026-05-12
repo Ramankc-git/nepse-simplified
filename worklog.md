@@ -142,3 +142,26 @@ Stage Summary:
 - PDF output matches the user's original HTML newsletter design with watermark
 - All styles are inline for html2pdf.js compatibility
 - Pages accessible at /newsletters/{slug}/pdf
+
+---
+Task ID: 20
+Agent: Main Agent
+Task: Fix PESTLE labels, add watermark, fix PDF SSR error
+
+Work Log:
+- Fixed PestleAnalysis.tsx: "Risks" → "Threats", "Strategic Focus" → "Strategies for Investors"
+- Fixed section title: "PESTLE Analysis" → "Market Sentiment (PESTLE Analysis)"
+- Fixed Watchlist.tsx: "Stock Watchlist" → "Smart Money Watchlist"
+- Fixed CompanyAnalysis.tsx: "Deep Dive: Company Analysis" → "Strategic Company Analysis"
+- Added watermark overlay to NewsletterTemplate.tsx (web view) — fixed diagonal "NEPSE SIMPLIFIED" text
+- Fixed PDF page SSR error: html2pdf.js requires browser APIs (self is not defined)
+  - Created PDFWrapper.tsx client component with next/dynamic ssr:false
+  - Updated pdf/page.tsx to use PDFWrapper instead of direct import
+- Verified all routes return 200: /newsletters/vol-001, /newsletters/vol-001/pdf, /newsletters/vol-002, /newsletters/vol-002/pdf
+
+Stage Summary:
+- All PESTLE column labels now match the original HTML design exactly
+- Watermark visible on both web view and PDF
+- PDF download works correctly (fixed SSR error with dynamic import)
+- All newsletter section titles consistent between web and PDF versions
+- Lint passes clean, all routes verified 200
