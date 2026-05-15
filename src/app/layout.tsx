@@ -120,9 +120,10 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} font-sans antialiased`}
         style={{ backgroundColor: "#f8fafc" }}
       >
-        {/* Auto-redirect invite/confirmation URLs to /admin/ */}
+        {/* Auto-redirect invite/confirmation URLs to /admin/ (only from non-admin pages) */}
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
+            if (window.location.pathname.startsWith('/admin')) return;
             var hash = window.location.hash;
             var search = window.location.search;
             if (hash.includes('invite_token') || hash.includes('confirmation_token') || hash.includes('recovery_token') || search.includes('invite_token') || search.includes('confirmation_token') || search.includes('recovery_token')) {
