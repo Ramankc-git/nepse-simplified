@@ -337,7 +337,7 @@ export const newsletters: NewsletterData[] = [
     ],
     companyName: "HRL: Himalayan Reinsurance",
     ltp: "628.40",
-    weeklyHigh: "-1.2%",
+    weeklyHigh: "709",
     trend: "Accumulating",
     description:
       "HRL is currently seeing a consolidation phase. Analysis of order book depth suggests institutional interest at current valuations. Sectoral stability in 'Others' acts as a tailwind despite broad market volatility.",
