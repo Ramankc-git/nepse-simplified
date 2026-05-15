@@ -1,5 +1,4 @@
 import Script from "next/script";
-import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "NEPSE SIMPLIFIED — Content Manager",
@@ -9,27 +8,38 @@ export const metadata = {
 export default function AdminPage() {
   return (
     <>
-      {/* Netlify Identity Widget — required for git-gateway authentication */}
+      {/* Netlify Identity Widget is loaded in layout.tsx for all pages — no duplicate here */}
+
+      {/* Decap CMS — load after identity widget is ready */}
       <Script
-        src="https://identity.netlify.com/v1/netlify-identity-widget.js"
-        strategy="beforeInteractive"
-      />
-      {/* Decap CMS */}
-      <Script
-        src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"
+        id="load-decap-cms"
         strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            function loadCMS() {
+              if (typeof window !== 'undefined' && typeof netlify !== 'undefined' && netlify.Identity) {
+                var s = document.createElement('script');
+                s.src = 'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js';
+                s.async = true;
+                document.head.appendChild(s);
+              } else {
+                setTimeout(loadCMS, 100);
+              }
+            }
+            loadCMS();
+          `,
+        }}
       />
-      {/* Identity confirmation handler — processes invite tokens in the URL */}
+
+      {/* Identity confirmation handler — processes invite/confirmation tokens in the URL */}
       <Script id="netlify-identity-handler" strategy="afterInteractive">
         {`
           (function() {
             if (typeof netlify !== 'undefined' && netlify.Identity) {
-              // If there's a token in the URL (invite, confirmation, recovery)
               if (window.location.hash.includes('confirmation_token') ||
                   window.location.hash.includes('invite_token') ||
                   window.location.hash.includes('recovery_token')) {
-                netlify.Identity.on('login', () => {
-                  // Reload after login to refresh the CMS state
+                netlify.Identity.on('login', function() {
                   window.location.href = '/admin/';
                 });
               }
