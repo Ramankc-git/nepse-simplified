@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -120,6 +121,23 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} font-sans antialiased`}
         style={{ backgroundColor: "#f8fafc" }}
       >
+        {/* Netlify Identity Widget — needed on ALL pages to process invite/confirmation tokens */}
+        <Script
+          src="https://identity.netlify.com/v1/netlify-identity-widget.js"
+          strategy="beforeInteractive"
+        />
+        {/* Auto-redirect invite/confirmation URLs to /admin/ */}
+        <Script id="identity-redirect" strategy="afterInteractive">
+          {`
+            (function() {
+              var hash = window.location.hash;
+              var search = window.location.search;
+              if (hash.includes('invite_token') || hash.includes('confirmation_token') || hash.includes('recovery_token') || search.includes('invite_token') || search.includes('confirmation_token') || search.includes('recovery_token')) {
+                window.location.replace('/admin/' + hash + search.replace('?', '&'));
+              }
+            })();
+          `}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
