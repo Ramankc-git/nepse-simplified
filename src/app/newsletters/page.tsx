@@ -4,6 +4,9 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { getAllNewsletters } from "@/lib/merged-data";
 
+// Revalidate every hour so new CMS content appears automatically
+export const revalidate = 3600;
+
 export default function NewslettersPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc]">

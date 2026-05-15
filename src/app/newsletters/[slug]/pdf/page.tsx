@@ -24,6 +24,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+// Revalidate every hour so new CMS content appears automatically
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   return getAllNewsletters().map((n) => ({
     slug: n.slug,

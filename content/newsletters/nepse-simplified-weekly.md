@@ -3,13 +3,15 @@ title: Nepse Simplified Weekly
 volume: Vol. 002.1
 dateRange: "11"
 asOfDate: "11"
-status: draft
+status: published
 ---
 
 
 # Market Snapshot
 
-**NEPSE Index:** 2,731.94 (-0.50%, -13.71 pts) — Prev: 2,745.65**Weekly Turnover:** Rs. 18.45B (+7.7%) — Prev Week: Rs. 17.12B
+**NEPSE Index:** 2,731.94 (-0.50%, -13.71 pts) — Prev: 2,745.65
+
+**Weekly Turnover:** Rs. 18.45B (+7.7%) — Prev Week: Rs. 17.12B
 
 **Sector Performance:**
 
