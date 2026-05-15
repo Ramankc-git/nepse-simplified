@@ -34,7 +34,7 @@
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
     Robots-Tag = "noindex, nofollow"
-    Content-Security-Policy = "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; img-src * data:; frame-ancestors 'self'; connect-src *"
+    Content-Security-Policy = "default-src * 'unsafe-inline' 'unsafe-eval' data:; script-src * 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com https://unpkg.com; style-src * 'unsafe-inline' https://fonts.googleapis.com; font-src * https://fonts.gstatic.com; img-src * data: https: blob:; frame-src * https://identity.netlify.com; frame-ancestors *; connect-src * https://identity.netlify.com https://api.netlify.com https://git-gateway.netlify.com;"
 
 # API routes - no indexing
 [[headers]]
