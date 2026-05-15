@@ -1,0 +1,108 @@
+---
+title: Nepse Simplified Weekly
+volume: Vol. 002.1
+dateRange: "11"
+asOfDate: "11"
+status: draft
+---
+
+
+# Market Snapshot
+
+**NEPSE Index:** 2,731.94 (-0.50%, -13.71 pts) — Prev: 2,745.65**Weekly Turnover:** Rs. 18.45B (+7.7%) — Prev Week: Rs. 17.12B
+
+**Sector Performance:**
+
+* **Commercial Banks:** +1.12% (Top)
+* **Hydropower:** +0.85%
+* **Laggard:** Finance Sector (-1.42%)
+
+**Market Context:** Minor correction led by profit-booking in Finance stocks. Index holding firm above 2,700 psychological support suggests a healthy consolidation rather than a trend reversal.
+
+## PESTLE Analysis — Opportunities
+
+### Interest Rate Ceiling
+
+Commercial banks keeping rates steady for Jyestha signals the peak is over. Cheaper margin lending is ahead.
+
+### Budget Anticipation
+
+Market expects clarity on capital gains tax. "Pre-budget rallies" are historically common in Nepal.
+
+### Absorption at 2700
+
+Institutions are defending the 2,700 mark. This creates a high-conviction "floor" for buyers.
+
+## PESTLE Analysis — Threats
+
+### Liquidity Mop-up
+
+NRB mopping Rs. 45B reduces short-term speculative energy. Expect sideways movement.
+
+### Small-Cap Fatigue
+
+Retailers in Finance/Hydro are exhausted. Selling pressure here could drag the index mood.
+
+### Remittance Plateau
+
+Any slowdown in inflow impacts bank liquidity. This is the "oxygen" of our market.
+
+## Strategic Focus
+
+* **Shift to Quality:** Rotate from "pump" stocks into large-cap 'Others' or Blue-chip banks with low P/E ratios.
+* **Tiered Entry:** Don't deploy 100% cash. Buy in 20% chunks at support levels (2,680 - 2,710).
+* **Monitor Turnover Leaders:** Only hold stocks maintaining Top-10 turnover. Liquidity is your best insurance policy.
+
+## Smart Money Watchlist
+
+### NIFRA — Dormant Giant Awakening
+
+Massive volume spikes seen at the bottom range of 230-240. Large block trades suggest high-net-worth accumulation after a long period of stagnation.
+
+> "When volume precedes price in a fundamental giant, pay attention."
+
+### HDL — Value Recovery
+
+After months of decline, smart money is nibbling at these multi-year lows. Turnover is slowly spiking against the bearish trend, indicating a potential trend reversal.
+
+## Upcoming Events
+
+**IPOs & Auctions:**
+
+* Kalanga Hydro (IPO): May 22 — May 25, 2026
+* Reliable Samriddhi-2: Final Call May 26
+
+**Policy:** 3rd Quarter Monetary Review: NRB maintained 12% Risk Weighting on share loans but signaled flexibility in the upcoming budget cycle. Continued pressure on banks to reduce interest rates further to stimulate the real economy.
+
+## Company Analysis — HRL: Himalayan Reinsurance
+
+**LTP:** 628.40 | **Weekly High:** 709 | **Trend:** Accumulating
+
+HRL is currently seeing a consolidation phase. Analysis of order book depth suggests institutional interest at current valuations. Sectoral stability in 'Others' acts as a tailwind despite broad market volatility.
+
+> "Ideal entry between 610-620. Watch for volume spikes on the daily chart as confirmation of the next leg up."
+
+* **Support Zone:** 610
+* **Resistance:** 675
+* **Institutional Demand:** Extreme High
+* **Market Float:** High
+
+## Learner's Insight
+
+### Mental Model — Skin in the Game
+
+Be careful with advice from those who don't lose money when you do. High-quality analysis always highlights both risks and rewards.
+
+### Cognition & Biases — Anchoring Bias
+
+Thinking a stock is "cheap" because it used to be higher. A stock's past price doesn't dictate its future value or current health.
+
+### Important Terms — Float and Volatility
+
+Low float stocks move fast with little volume. High float stocks like HRL or NIFRA need massive capital to move, making them more "stable".
+
+## Weekly Summary
+
+The weekly close was slightly corrective but maintained the structural integrity of the bull run. Investors should focus on high-liquidity stocks while monitoring the upcoming budget signals.
+
+> ⚠️ FOR EDUCATIONAL PURPOSES ONLY — NOT FINANCIAL ADVICE
