@@ -118,9 +118,9 @@ function parseNewsletterMarkdown(
         const items = parseSubsectionItems(section.split("\n").slice(1).join("\n"));
         risks.push(...items);
       } else if (section.startsWith("Strategic Focus")) {
-        const lines = section.split("\n").filter((l) => l.startsWith("- **"));
+        const lines = section.split("\n").filter((l) => /^[\-\*] \*\*/.test(l));
         for (const line of lines) {
-          const m = line.match(/^- \*\*(.+?):\*\*\s*(.+)/);
+          const m = line.match(/^[\-\*] \*\*(.+?):\*\*\s*(.+)/);
           if (m) strategicFocus.push({ title: m[1].trim(), takeaway: m[2].trim() });
         }
       }
@@ -148,7 +148,7 @@ function parseNewsletterMarkdown(
         // Extract text (everything except blockquotes and bullet lines)
         const textLines = block
           .split("\n")
-          .filter((l) => l.trim() && !l.startsWith(">") && !l.startsWith("-") && !l.startsWith("###"));
+          .filter((l) => l.trim() && !l.startsWith(">") && !/^[\-\*]\s/.test(l) && !l.startsWith("###"));
         const reasoning = textLines.slice(0, 2).join(" ").trim();
 
         // Extract tip from blockquote
@@ -172,8 +172,8 @@ function parseNewsletterMarkdown(
           currentList = "policy";
           const policyText = line.replace(/\*\*Policy:\*\*\s*/, "").trim();
           if (policyText) policyNotices.push(policyText);
-        } else if (line.startsWith("- ") && currentList === "ipo") {
-          iposAndAuctions.push(line.replace(/^-\s*/, "").trim());
+        } else if (/^[\-\*]\s/.test(line) && currentList === "ipo") {
+          iposAndAuctions.push(line.replace(/^[\-\*]\s*/, "").trim());
         }
       }
     }
@@ -209,7 +209,7 @@ function parseNewsletterMarkdown(
       // Description: paragraph lines after the LTP line
       const descLines = companySection
         .split("\n")
-        .filter((l) => l.trim() && !l.startsWith(">") && !l.startsWith("-") && !l.startsWith("**") && !l.startsWith("###"));
+        .filter((l) => l.trim() && !l.startsWith(">") && !/^[\-\*]\s/.test(l) && !l.startsWith("**") && !l.startsWith("###"));
       description = descLines.slice(0, 2).join(" ").trim();
 
       // Extract detail fields
