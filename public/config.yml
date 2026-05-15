@@ -1,0 +1,74 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images"
+public_folder: "/images"
+
+locale: "en"
+
+collections:
+  # ===================== NEWSLETTERS =====================
+  - name: "newsletters"
+    label: "Weekly Newsletters"
+    folder: "content/newsletters"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{volume}} — {{dateRange}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Volume", name: "volume", widget: "string", default: "Vol. XXX" }
+      - { label: "Date Range", name: "dateRange", widget: "string" }
+      - { label: "As of Date", name: "asOfDate", widget: "string" }
+      - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "draft" }
+      - { label: "Body Content", name: "body", widget: "markdown" }
+
+  # ===================== ANALYSIS ARTICLES =====================
+  - name: "analysis"
+    label: "Analysis Articles"
+    folder: "content/analysis"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Category", name: "category", widget: "select", options: ["company", "sector"] }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Read Time", name: "readTime", widget: "string", default: "8 min read" }
+      - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" } }
+      - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "draft" }
+      - { label: "Body Content", name: "body", widget: "markdown" }
+
+  # ===================== LEARNING ARTICLES =====================
+  - name: "learning"
+    label: "Learning Articles"
+    folder: "content/learning"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Category", name: "category", widget: "select", options: ["Fundamentals", "Valuation", "Technical Analysis", "IPO", "Market Psychology"] }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Read Time", name: "readTime", widget: "string", default: "8 min read" }
+      - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" } }
+      - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "draft" }
+      - { label: "Body Content", name: "body", widget: "markdown" }
+
+  # ===================== MARKET EVENTS =====================
+  - name: "events"
+    label: "Market Events"
+    folder: "content/events"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "Event Title", name: "title", widget: "string" }
+      - { label: "Type", name: "type", widget: "select", options: ["ipo", "right-share", "auction", "dividend", "agm", "policy"] }
+      - { label: "Company", name: "company", widget: "string" }
+      - { label: "Start Date", name: "startDate", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "End Date", name: "endDate", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Status", name: "status", widget: "select", options: ["upcoming", "open", "closed"] }
+      - { label: "Details", name: "details", widget: "text" }
