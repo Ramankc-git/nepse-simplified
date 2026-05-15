@@ -3,7 +3,7 @@
 // NEPSE's official API (nepalstock.com) requires authentication — it returns 401 for unauthenticated requests.
 // Third-party APIs (nepsealpha.com, heroku apps) are behind Cloudflare or offline.
 //
-// CURRENT STATE: This module serves static/sample data instantly.
+// CURRENT STATE: Tries real NEPSE API endpoints, falls back to sample data.
 //
 // HOW TO CONNECT A REAL DATA SOURCE:
 // 1. NEPSE Official: Contact NEPSE for API access, or use browser cookies via a proxy.
@@ -51,75 +51,67 @@ export interface MarketDataResult {
 }
 
 // ============================================================
-// API Sources — add your working API endpoint here
+// API Sources — free NEPSE API endpoints with CORS proxy fallback
 // ============================================================
-// If you get access to a working NEPSE data API, add it below.
-// The fetcher will try each endpoint with a short timeout (3s).
 const NEPSE_APIS: { name: string; url: string }[] = [
-  // Example: { name: "My NEPSE Proxy", url: "https://my-proxy.example.com/api/nepse" },
-  // NEPSE official API requires auth — uncomment if you have credentials:
-  // { name: "NEPSE Official", url: "https://www.nepalstock.com/api/nots/market-summary" },
+  { name: "NEPSE API", url: "https://nepse-api.onrender.com/api/nepse" },
+  { name: "NEPSE CORS Proxy", url: "https://corsproxy.io/?https://nepse-api.onrender.com/api/nepse" },
 ];
 
 // ============================================================
-// Editable Sample Data — update these values manually
+// Editable Sample Data — matches Vol. 002 newsletter values
 // This data is shown on the Market Data page when no API is connected.
 // ============================================================
 function getSampleMarketData(): MarketDataResult {
   return {
-    timestamp: "2026-05-12T10:45:00+05:45", // Update to latest trading session timestamp
+    timestamp: "2026-05-15T15:00:00+05:45", // Vol. 002 close
     nepseIndex: {
-      value: 2768.41,
-      change: 22.76,
-      changePercent: 0.83,
+      value: 2731.94,
+      change: -13.71,
+      changePercent: -0.5,
     },
-    turnover: 19.45, // in Billions (Rs.)
-    turnoverChange: 13.6,
+    turnover: 18.45, // in Billions (Rs.)
+    turnoverChange: 7.7,
     topGainers: [
-      { symbol: "JHPL", name: "Jhapa Power", ltp: 425.0, change: 65.0, changePercent: 18.06, open: 360.0, high: 430.0, low: 358.0, volume: 125000, turnover: 53125000 },
-      { symbol: "SOAL", name: "Siddhartha Oxygen", ltp: 875.0, change: 52.0, changePercent: 6.32, open: 823.0, high: 882.0, low: 820.0, volume: 45000, turnover: 39375000 },
-      { symbol: "LSCF", name: "Life Insurance Corp", ltp: 680.0, change: 38.5, changePercent: 6.0, open: 641.5, high: 685.0, low: 638.0, volume: 28000, turnover: 19040000 },
-      { symbol: "CBBL", name: "Citizen Bank Int'l", ltp: 342.0, change: 18.0, changePercent: 5.56, open: 324.0, high: 345.0, low: 322.0, volume: 85000, turnover: 29070000 },
-      { symbol: "PBL", name: "Prabhu Bank", ltp: 148.5, change: 7.5, changePercent: 5.32, open: 141.0, high: 150.0, low: 140.0, volume: 220000, turnover: 32670000 },
+      { symbol: "NIFRA", name: "Nepal Infra", ltp: 238.0, change: 12.5, changePercent: 5.54, open: 225.5, high: 240.0, low: 224.0, volume: 185000, turnover: 44030000 },
+      { symbol: "HDL", name: "Hydro Dev Ltd", ltp: 312.0, change: 14.0, changePercent: 4.7, open: 298.0, high: 315.0, low: 296.0, volume: 62000, turnover: 19344000 },
+      { symbol: "CBBL", name: "Citizen Bank Int'l", ltp: 342.0, change: 14.0, changePercent: 4.26, open: 328.0, high: 345.0, low: 326.0, volume: 78000, turnover: 26676000 },
+      { symbol: "NABIL", name: "Nabil Bank", ltp: 1025.0, change: 32.0, changePercent: 3.22, open: 993.0, high: 1030.0, low: 990.0, volume: 45000, turnover: 46125000 },
+      { symbol: "PBL", name: "Prabhu Bank", ltp: 148.5, change: 4.5, changePercent: 3.12, open: 144.0, high: 149.5, low: 143.0, volume: 195000, turnover: 28957500 },
     ],
     topLosers: [
-      { symbol: "SWBBL", name: "Swabhiman Laghubitta", ltp: 512.0, change: -36.0, changePercent: -6.57, open: 548.0, high: 550.0, low: 510.0, volume: 32000, turnover: 16384000 },
-      { symbol: "GMFBS", name: "Global IME Micro", ltp: 78.5, change: -5.0, changePercent: -5.99, open: 83.5, high: 84.0, low: 78.0, volume: 180000, turnover: 14130000 },
-      { symbol: "LBBL", name: "Lumbini Bikas Bank", ltp: 298.0, change: -14.0, changePercent: -4.49, open: 312.0, high: 314.0, low: 296.0, volume: 42000, turnover: 12516000 },
-      { symbol: "NLIC", name: "Nepal Life Insurance", ltp: 2150.0, change: -95.0, changePercent: -4.23, open: 2245.0, high: 2250.0, low: 2140.0, volume: 5500, turnover: 11825000 },
+      { symbol: "JHPL", name: "Jhapa Power", ltp: 360.0, change: -65.0, changePercent: -15.29, open: 425.0, high: 425.0, low: 355.0, volume: 98000, turnover: 35280000 },
+      { symbol: "LBBL", name: "Lumbini Bikas Bank", ltp: 298.0, change: -18.0, changePercent: -5.7, open: 316.0, high: 318.0, low: 295.0, volume: 38000, turnover: 11324000 },
+      { symbol: "GMFBS", name: "Global IME Micro", ltp: 78.5, change: -4.5, changePercent: -5.42, open: 83.0, high: 83.5, low: 78.0, volume: 160000, turnover: 12560000 },
+      { symbol: "NLIC", name: "Nepal Life Insurance", ltp: 2150.0, change: -100.0, changePercent: -4.44, open: 2250.0, high: 2255.0, low: 2145.0, volume: 4200, turnover: 9030000 },
       { symbol: "SLBSL", name: "Sanima Laghubitta", ltp: 1650.0, change: -62.0, changePercent: -3.62, open: 1712.0, high: 1720.0, low: 1640.0, volume: 8500, turnover: 14025000 },
     ],
     sectorIndices: [
-      { name: "Commercial Banking", index: 3125.45, change: 28.12, changePercent: 0.91 },
-      { name: "Development Banking", index: 1456.78, change: -34.11, changePercent: -2.29 },
-      { name: "Finance", index: 987.32, change: 33.78, changePercent: 3.54 },
-      { name: "Hydro Power", index: 2456.89, change: 52.34, changePercent: 2.17 },
-      { name: "Investment", index: 876.54, change: 12.45, changePercent: 1.44 },
-      { name: "Manufacturing", index: 1567.23, change: 8.9, changePercent: 0.57 },
-      { name: "Mutual Fund", index: 45.67, change: -0.34, changePercent: -0.74 },
-      { name: "Life Insurance", index: 5678.9, change: -45.67, changePercent: -0.80 },
-      { name: "Non-Life Insurance", index: 2345.67, change: 34.56, changePercent: 1.50 },
-      { name: "Microfinance", index: 1234.56, change: -51.23, changePercent: -3.98 },
-      { name: "Trading", index: 678.9, change: 12.34, changePercent: 1.85 },
-      { name: "Hotels & Tourism", index: 1890.12, change: 23.45, changePercent: 1.26 },
-      { name: "Others", index: 567.89, change: -5.67, changePercent: -0.99 },
+      { name: "Commercial Banking", index: 3125.45, change: 34.2, changePercent: 1.12 },
+      { name: "Development Banking", index: 1456.78, change: -18.45, changePercent: -1.25 },
+      { name: "Finance", index: 987.32, change: -14.03, changePercent: -1.42 },
+      { name: "Hydro Power", index: 2456.89, change: 20.59, changePercent: 0.85 },
+      { name: "Investment", index: 876.54, change: 5.26, changePercent: 0.6 },
+      { name: "Manufacturing", index: 1567.23, change: -8.92, changePercent: -0.57 },
+      { name: "Mutual Fund", index: 45.67, change: -0.12, changePercent: -0.26 },
+      { name: "Life Insurance", index: 5678.9, change: -22.71, changePercent: -0.4 },
+      { name: "Non-Life Insurance", index: 2345.67, change: 14.07, changePercent: 0.6 },
+      { name: "Microfinance", index: 1234.56, change: -38.27, changePercent: -3.0 },
+      { name: "Trading", index: 678.9, change: 3.39, changePercent: 0.5 },
+      { name: "Hotels & Tourism", index: 1890.12, change: 9.45, changePercent: 0.5 },
+      { name: "Others", index: 567.89, change: -2.84, changePercent: -0.5 },
     ],
     source: "manual" as const,
-    dataSource: "Sample data — edit src/lib/nepse-api.ts to update, or add an API endpoint for live data",
+    dataSource: "Sample data (Vol. 002) — edit src/lib/nepse-api.ts to update, or connect a real API endpoint for live data",
   };
 }
 
 export async function fetchMarketData(): Promise<MarketDataResult> {
-  // If no APIs are configured, return sample data instantly (no waiting)
-  if (NEPSE_APIS.length === 0) {
-    return getSampleMarketData();
-  }
-
   // Try each configured API source with a short timeout
   for (const api of NEPSE_APIS) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
       const response = await fetch(api.url, {
         signal: controller.signal,
@@ -193,6 +185,15 @@ export async function fetchMarketData(): Promise<MarketDataResult> {
     }
   }
 
-  // All APIs failed — return sample data instantly
+  // All APIs failed — return sample data
   return getSampleMarketData();
+}
+
+// Weekly turnover trend data for charts (based on Vol. 001 and Vol. 002)
+export function getWeeklyTurnoverTrend() {
+  return [
+    { week: "Week 1 (Apr)", turnover: 21.18 },
+    { week: "Week 2 (May)", turnover: 17.12 },
+    { week: "Week 3 (May)", turnover: 18.45 },
+  ];
 }

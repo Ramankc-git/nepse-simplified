@@ -5,7 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SubscribeForm } from '@/components/common/SubscribeForm';
 import { AdPlaceholder } from '@/components/common/AdPlaceholder';
-import { type MarketDataResult } from '@/lib/nepse-api';
+import { type MarketDataResult, getWeeklyTurnoverTrend } from '@/lib/nepse-api';
 import {
   TrendingUp,
   TrendingDown,
@@ -19,6 +19,17 @@ import {
   Zap,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  LabelList,
+} from 'recharts';
 
 function formatNumber(num: number, decimals = 2): string {
   return num.toLocaleString('en-US', {
@@ -52,14 +63,11 @@ function isMarketHours(): boolean {
   const utc = now.getTime() + now.getTimezoneOffset() * 60000;
   const nepalTime = new Date(utc + 5.75 * 3600000);
 
-  const day = nepalTime.getDay(); // 0=Sun, 6=Sat
+  const day = nepalTime.getDay();
   const hours = nepalTime.getHours();
   const minutes = nepalTime.getMinutes();
   const timeDecimal = hours + minutes / 60;
 
-  // Market open: Sunday-Thursday, 11:00-15:00 NST
-  if (day === 0 || day === 6) return false; // Sat=6, but NEPSE open Sun-Fri mapped as 0-4
-  // Actually, Nepal's week: Sunday=0, ..., Thursday=4, Friday=5, Saturday=6
   if (day === 5 || day === 6) return false;
   return timeDecimal >= 11 && timeDecimal <= 15;
 }
@@ -140,6 +148,7 @@ export default function MarketPage() {
 
   const marketOpen = isMarketHours();
   const isPositive = data ? data.nepseIndex.change >= 0 : true;
+  const turnoverTrend = getWeeklyTurnoverTrend();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -250,7 +259,7 @@ export default function MarketPage() {
                 )}
 
                 {/* NEPSE Index Card */}
-                <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-premium">
+                <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-premium">
                   <div className="flex items-center gap-2 mb-6">
                     <Activity className="w-5 h-5 text-[#0a2141]" />
                     <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
@@ -260,7 +269,7 @@ export default function MarketPage() {
                   <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-8">
                     <div>
                       <div className="flex items-end gap-4">
-                        <span className="font-heading text-4xl sm:text-5xl font-extrabold text-[#0a2141] tracking-tight">
+                        <span className="font-heading text-4xl sm:text-5xl font-extrabold text-[#0a2141] dark:text-white tracking-tight">
                           {formatNumber(data.nepseIndex.value)}
                         </span>
                         {isPositive ? (
@@ -299,7 +308,7 @@ export default function MarketPage() {
                       <span className="text-[9px] uppercase font-black tracking-widest text-slate-400 block mb-1">
                         Daily Turnover
                       </span>
-                      <span className="font-heading text-xl sm:text-2xl font-bold text-[#0a2141]">
+                      <span className="font-heading text-xl sm:text-2xl font-bold text-[#0a2141] dark:text-white">
                         Rs. {formatNumber(data.turnover)}B
                       </span>
                       {data.turnoverChange !== 0 && (
@@ -317,10 +326,64 @@ export default function MarketPage() {
                   </div>
                 </div>
 
+                {/* Weekly Turnover Trend Chart */}
+                <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-premium">
+                  <div className="flex items-center gap-2 mb-6">
+                    <BarChart3 className="w-5 h-5 text-[#0a2141]" />
+                    <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
+                      Weekly Turnover Trend (Rs. Billion)
+                    </span>
+                  </div>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={turnoverTrend} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis
+                          dataKey="week"
+                          tick={{ fontSize: 12, fill: '#94a3b8' }}
+                          axisLine={{ stroke: '#e2e8f0' }}
+                          tickLine={false}
+                        />
+                        <YAxis
+                          tick={{ fontSize: 12, fill: '#94a3b8' }}
+                          axisLine={false}
+                          tickLine={false}
+                          domain={[0, 'auto']}
+                          tickFormatter={(val: number) => `${val}B`}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: '#fff',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '12px',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                            fontSize: '13px',
+                          }}
+                          formatter={(value: number) => [`Rs. ${value}B`, 'Turnover']}
+                        />
+                        <Bar dataKey="turnover" radius={[8, 8, 0, 0]} maxBarSize={80}>
+                          {turnoverTrend.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={index === turnoverTrend.length - 1 ? '#0a2141' : '#94a3b8'}
+                            />
+                          ))}
+                          <LabelList
+                            dataKey="turnover"
+                            position="top"
+                            formatter={(val: number) => `${val}B`}
+                            style={{ fontSize: 12, fontWeight: 600, fill: '#475569' }}
+                          />
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
                 {/* Top Gainers & Losers */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Top Gainers */}
-                  <div className="bg-white rounded-3xl p-6 shadow-premium">
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-premium">
                     <div className="flex items-center gap-2 mb-5">
                       <TrendingUp className="w-5 h-5 text-green-600" />
                       <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
@@ -330,7 +393,7 @@ export default function MarketPage() {
                     <div className="overflow-x-auto -mx-6 px-6">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-slate-100">
+                          <tr className="border-b border-slate-100 dark:border-slate-800">
                             <th className="text-left py-2 text-[10px] uppercase font-black tracking-wider text-slate-400">
                               Symbol
                             </th>
@@ -352,12 +415,12 @@ export default function MarketPage() {
                           {data.topGainers.map((stock) => (
                             <tr
                               key={stock.symbol}
-                              className="border-b border-slate-50 last:border-0 hover:bg-green-50/30 transition-colors"
+                              className="border-b border-slate-50 dark:border-slate-800 last:border-0 hover:bg-green-50/30 dark:hover:bg-green-900/10 transition-colors"
                             >
                               <td className="py-3">
-                                <span className="font-bold text-slate-800">{stock.symbol}</span>
+                                <span className="font-bold text-slate-800 dark:text-slate-200">{stock.symbol}</span>
                               </td>
-                              <td className="text-right py-3 font-semibold text-slate-700">
+                              <td className="text-right py-3 font-semibold text-slate-700 dark:text-slate-300">
                                 Rs. {formatNumber(stock.ltp, 0)}
                               </td>
                               <td className="text-right py-3 text-green-600 font-semibold">
@@ -379,7 +442,7 @@ export default function MarketPage() {
                   </div>
 
                   {/* Top Losers */}
-                  <div className="bg-white rounded-3xl p-6 shadow-premium">
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-premium">
                     <div className="flex items-center gap-2 mb-5">
                       <TrendingDown className="w-5 h-5 text-red-500" />
                       <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
@@ -389,7 +452,7 @@ export default function MarketPage() {
                     <div className="overflow-x-auto -mx-6 px-6">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-slate-100">
+                          <tr className="border-b border-slate-100 dark:border-slate-800">
                             <th className="text-left py-2 text-[10px] uppercase font-black tracking-wider text-slate-400">
                               Symbol
                             </th>
@@ -411,12 +474,12 @@ export default function MarketPage() {
                           {data.topLosers.map((stock) => (
                             <tr
                               key={stock.symbol}
-                              className="border-b border-slate-50 last:border-0 hover:bg-red-50/30 transition-colors"
+                              className="border-b border-slate-50 dark:border-slate-800 last:border-0 hover:bg-red-50/30 dark:hover:bg-red-900/10 transition-colors"
                             >
                               <td className="py-3">
-                                <span className="font-bold text-slate-800">{stock.symbol}</span>
+                                <span className="font-bold text-slate-800 dark:text-slate-200">{stock.symbol}</span>
                               </td>
-                              <td className="text-right py-3 font-semibold text-slate-700">
+                              <td className="text-right py-3 font-semibold text-slate-700 dark:text-slate-300">
                                 Rs. {formatNumber(stock.ltp, 0)}
                               </td>
                               <td className="text-right py-3 text-red-600 font-semibold">
@@ -438,62 +501,119 @@ export default function MarketPage() {
                   </div>
                 </div>
 
-                {/* Sector Performance */}
-                <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-premium">
-                  <div className="flex items-center gap-2 mb-6">
-                    <BarChart3 className="w-5 h-5 text-[#0a2141]" />
-                    <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
-                      Sector Performance
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {data.sectorIndices.map((sector) => {
-                      const positive = sector.change >= 0;
-                      return (
-                        <div
-                          key={sector.name}
-                          className={`rounded-2xl p-4 border transition-all hover:shadow-md ${
-                            positive
-                              ? 'border-green-100 bg-green-50/30 hover:border-green-200'
-                              : 'border-red-100 bg-red-50/30 hover:border-red-200'
-                          }`}
+                {/* Sector Performance Grid + Chart */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Sector Performance Horizontal Bar Chart */}
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-premium">
+                    <div className="flex items-center gap-2 mb-6">
+                      <BarChart3 className="w-5 h-5 text-[#0a2141]" />
+                      <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
+                        Sector Changes (%)
+                      </span>
+                    </div>
+                    <div className="h-[400px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={[...data.sectorIndices].sort((a, b) => a.changePercent - b.changePercent)}
+                          layout="vertical"
+                          margin={{ top: 0, right: 40, left: 10, bottom: 0 }}
                         >
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-semibold text-slate-800 leading-tight">
-                              {sector.name}
-                            </span>
-                            {positive ? (
-                              <ArrowUpRight className="w-4 h-4 text-green-600 shrink-0" />
-                            ) : (
-                              <ArrowDownRight className="w-4 h-4 text-red-500 shrink-0" />
-                            )}
-                          </div>
-                          <div className="flex items-baseline justify-between gap-2">
-                            <span className="text-lg font-bold text-[#0a2141]">
-                              {formatNumber(sector.index)}
-                            </span>
-                            <div className="text-right">
-                              <span
-                                className={`text-sm font-semibold ${
-                                  positive ? 'text-green-600' : 'text-red-600'
-                                }`}
-                              >
-                                {positive ? '+' : ''}
-                                {formatNumber(sector.change)}
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
+                          <XAxis
+                            type="number"
+                            tick={{ fontSize: 11, fill: '#94a3b8' }}
+                            axisLine={{ stroke: '#e2e8f0' }}
+                            tickLine={false}
+                            tickFormatter={(val: number) => `${val > 0 ? '+' : ''}${val}%`}
+                          />
+                          <YAxis
+                            dataKey="name"
+                            type="category"
+                            tick={{ fontSize: 11, fill: '#475569' }}
+                            axisLine={false}
+                            tickLine={false}
+                            width={120}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: '#fff',
+                              border: '1px solid #e2e8f0',
+                              borderRadius: '12px',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                              fontSize: '12px',
+                            }}
+                            formatter={(value: number) => [`${value > 0 ? '+' : ''}${value.toFixed(2)}%`, 'Change']}
+                          />
+                          <Bar dataKey="changePercent" radius={[0, 6, 6, 0]} maxBarSize={24}>
+                            {[...data.sectorIndices].sort((a, b) => a.changePercent - b.changePercent).map((entry, index) => (
+                              <Cell
+                                key={`sector-${index}`}
+                                fill={entry.changePercent >= 0 ? '#16a34a' : '#dc2626'}
+                              />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Sector Cards */}
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-premium">
+                    <div className="flex items-center gap-2 mb-6">
+                      <Activity className="w-5 h-5 text-[#0a2141]" />
+                      <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
+                        Sector Indices
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
+                      {data.sectorIndices.map((sector) => {
+                        const positive = sector.change >= 0;
+                        return (
+                          <div
+                            key={sector.name}
+                            className={`rounded-2xl p-4 border transition-all hover:shadow-md ${
+                              positive
+                                ? 'border-green-100 dark:border-green-900 bg-green-50/30 dark:bg-green-900/10 hover:border-green-200'
+                                : 'border-red-100 dark:border-red-900 bg-red-50/30 dark:bg-red-900/10 hover:border-red-200'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">
+                                {sector.name}
                               </span>
-                              <span
-                                className={`ml-1 text-xs font-bold ${
-                                  positive ? 'text-green-500' : 'text-red-500'
-                                }`}
-                              >
-                                ({positive ? '+' : ''}
-                                {formatNumber(sector.changePercent)}%)
+                              {positive ? (
+                                <ArrowUpRight className="w-4 h-4 text-green-600 shrink-0" />
+                              ) : (
+                                <ArrowDownRight className="w-4 h-4 text-red-500 shrink-0" />
+                              )}
+                            </div>
+                            <div className="flex items-baseline justify-between gap-2">
+                              <span className="text-lg font-bold text-[#0a2141] dark:text-white">
+                                {formatNumber(sector.index)}
                               </span>
+                              <div className="text-right">
+                                <span
+                                  className={`text-sm font-semibold ${
+                                    positive ? 'text-green-600' : 'text-red-600'
+                                  }`}
+                                >
+                                  {positive ? '+' : ''}
+                                  {formatNumber(sector.change)}
+                                </span>
+                                <span
+                                  className={`ml-1 text-xs font-bold ${
+                                    positive ? 'text-green-500' : 'text-red-500'
+                                  }`}
+                                >
+                                  ({positive ? '+' : ''}
+                                  {formatNumber(sector.changePercent)}%)
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 

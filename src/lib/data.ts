@@ -236,6 +236,140 @@ export const newsletters: NewsletterData[] = [
     summaryText:
       "The weekly close was slightly positive but lacked the volume support needed for a major breakout. Investors should look for quality 'Growth at Reasonable Price' stocks while monitoring the NRB's next move.",
   },
+  {
+    slug: "vol-002",
+    volume: "Vol. 002",
+    dateRange: "May 08 — May 15, 2026",
+    asOfDate: "May 15, 2026",
+    indexClosing: "2,731.94",
+    indexPrevious: "2,745.65",
+    indexChange: "-0.50%",
+    indexChangePoints: "(-13.71 pts)",
+    indexPositive: false,
+    turnoverThisWeek: "18.45B",
+    turnoverPrevWeek: "17.12B",
+    turnoverChange: "+7.7%",
+    turnoverPositive: true,
+    topSectorName: "Commercial Banks",
+    topSectorChange: "+1.12%",
+    secondSectorName: "Hydropower",
+    secondSectorChange: "+0.85%",
+    laggardSector: "Finance Sector (-1.42%)",
+    marketContext:
+      "Minor correction led by profit-booking in Finance stocks. Index holding firm above 2,700 psychological support suggests a healthy consolidation rather than a trend reversal.",
+    opportunities: [
+      {
+        title: "Interest Rate Ceiling",
+        takeaway:
+          "Commercial banks keeping rates steady for Jyestha signals the peak is over. Cheaper margin lending is ahead.",
+      },
+      {
+        title: "Budget Anticipation",
+        takeaway:
+          'Market expects clarity on capital gains tax. "Pre-budget rallies" are historically common in Nepal.',
+      },
+      {
+        title: "Absorption at 2700",
+        takeaway:
+          'Institutions are defending the 2,700 mark. This creates a high-conviction "floor" for buyers.',
+      },
+    ],
+    risks: [
+      {
+        title: "Liquidity Mop-up",
+        takeaway:
+          "NRB mopping Rs. 45B reduces short-term speculative energy. Expect sideways movement.",
+      },
+      {
+        title: "Small-Cap Fatigue",
+        takeaway:
+          "Retailers in Finance/Hydro are exhausted. Selling pressure here could drag the index mood.",
+      },
+      {
+        title: "Remittance Plateau",
+        takeaway:
+          'Any slowdown in inflow impacts bank liquidity. This is the "oxygen" of our market.',
+      },
+    ],
+    strategicFocus: [
+      {
+        title: "Shift to Quality",
+        takeaway:
+          "Rotate from \"pump\" stocks into large-cap 'Others' or Blue-chip banks with low P/E ratios.",
+      },
+      {
+        title: "Tiered Entry",
+        takeaway:
+          "Don't deploy 100% cash. Buy in 20% chunks at support levels (2,680 - 2,710).",
+      },
+      {
+        title: "Monitor Turnover Leaders",
+        takeaway:
+          "Only hold stocks maintaining Top-10 turnover. Liquidity is your best insurance policy.",
+      },
+    ],
+    stocks: [
+      {
+        symbol: "NIFRA",
+        badge: "Dormant Giant Awakening",
+        badgeColor: "blue",
+        reasoning:
+          "Massive volume spikes seen at the bottom range of 230-240. Large block trades suggest high-net-worth accumulation after a long period of stagnation.",
+        tip:
+          "When volume precedes price in a fundamental giant, pay attention.",
+      },
+      {
+        symbol: "HDL",
+        badge: "Value Recovery",
+        badgeColor: "green",
+        reasoning:
+          "After months of decline, smart money is nibbling at these multi-year lows. Turnover is slowly spiking against the bearish trend, indicating a potential trend reversal.",
+        tip:
+          "",
+      },
+    ],
+    iposAndAuctions: [
+      "Kalanga Hydro (IPO): May 22 — May 25, 2026",
+      "Reliable Samriddhi-2: Final Call May 26",
+    ],
+    policyNotices: [
+      "3rd Quarter Monetary Review: NRB maintained 12% Risk Weighting on share loans but signaled flexibility in the upcoming budget cycle. Continued pressure on banks to reduce interest rates further to stimulate the real economy.",
+    ],
+    companyName: "HRL: Himalayan Reinsurance",
+    ltp: "628.40",
+    weeklyHigh: "-1.2%",
+    trend: "Accumulating",
+    description:
+      "HRL is currently seeing a consolidation phase. Analysis of order book depth suggests institutional interest at current valuations. Sectoral stability in 'Others' acts as a tailwind despite broad market volatility.",
+    strategicOpinion:
+      "Ideal entry between 610-620. Watch for volume spikes on the daily chart as confirmation of the next leg up.",
+    supportZone: "610",
+    resistance: "675",
+    institutionalDemand: "Extreme High",
+    marketFloat: "High",
+    insights: [
+      {
+        category: "Mental Model",
+        title: "Skin in the Game",
+        description:
+          "Be careful with advice from those who don't lose money when you do. High-quality analysis always highlights both risks and rewards.",
+      },
+      {
+        category: "Cognition & Biases",
+        title: "Anchoring Bias",
+        description:
+          'Thinking a stock is "cheap" because it used to be higher. A stock\'s past price doesn\'t dictate its future value or current health.',
+      },
+      {
+        category: "Important Terms",
+        title: "Float and Volatility",
+        description:
+          "Low float stocks move fast with little volume. High float stocks like HRL or NIFRA need massive capital to move, making them more \"stable\".",
+      },
+    ],
+    summaryText:
+      "The weekly close was slightly corrective but maintained the structural integrity of the bull run. Investors should focus on high-liquidity stocks while monitoring the upcoming budget signals.",
+  },
 ];
 
 export const analysisArticles: AnalysisArticle[] = [

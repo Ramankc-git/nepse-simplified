@@ -6,7 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { AdPlaceholder } from "@/components/common/AdPlaceholder";
 import { ContentRenderer } from "@/components/common/ContentRenderer";
 import ShareLinks from "@/components/common/ShareLinks";
-import { learningArticles, getLearningArticle } from "@/lib/data";
+import { learningArticles, getLearningArticle, type ContentBlock } from "@/lib/data";
 import {
   ArrowLeft,
   Calendar,
@@ -85,7 +85,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
-function collectMetrics(blocks: typeof article.content) {
+function collectMetrics(blocks: ContentBlock[]) {
   return blocks.filter((b) => b.type === "metric") as {
     type: "metric";
     label: string;

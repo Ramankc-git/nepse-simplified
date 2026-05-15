@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
 
 // Simple in-memory rate limiting (resets on server restart)
 const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
@@ -62,6 +63,20 @@ export async function POST(request: Request) {
       if (emailLower.includes(pattern)) {
         return NextResponse.json({ error: 'Please use a real email address' }, { status: 400 });
       }
+    }
+
+    // Save subscriber to database
+    try {
+      await db.subscriber.upsert({
+        where: { email: emailLower },
+        update: { active: true },
+        create: {
+          email: emailLower,
+          active: true,
+        },
+      });
+    } catch {
+      // DB save is non-blocking — don't fail the subscription if DB is unavailable
     }
 
     // Buttondown API integration (free tier)
