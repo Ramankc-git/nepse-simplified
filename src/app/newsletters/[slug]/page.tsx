@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import NewsletterTemplate, {
   type NewsletterData,
 } from "@/components/newsletter/NewsletterTemplate";
-import { getNewsletter, newsletters } from "@/lib/data";
+import { getNewsletter, getAllNewsletters } from "@/lib/merged-data";
 import ShareLinks from "@/components/common/ShareLinks";
 
 interface PageProps {
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  return newsletters.map((n) => ({
+  return getAllNewsletters().map((n) => ({
     slug: n.slug,
   }));
 }

@@ -18,17 +18,17 @@ import { Footer } from "@/components/layout/Footer";
 import { SubscribeForm } from "@/components/common/SubscribeForm";
 import { AdPlaceholder } from "@/components/common/AdPlaceholder";
 import {
-  newsletters,
-  analysisArticles,
-  learningArticles,
+  getAllNewsletters,
+  getAllAnalysisArticles,
+  getAllLearningArticles,
   getLatestNewsletter,
-  marketEvents,
+  getAllMarketEvents,
   getEventEffectiveStatus,
-} from "@/lib/data";
+} from "@/lib/merged-data";
 
 export default function Home() {
   const latestNewsletter = getLatestNewsletter();
-  const upcomingEvents = marketEvents
+  const upcomingEvents = getAllMarketEvents()
     .filter((e) => getEventEffectiveStatus(e) !== "closed")
     .slice(0, 3);
 
@@ -337,7 +337,7 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
-                  {analysisArticles.slice(0, 2).map((article) => (
+                  {getAllAnalysisArticles().slice(0, 2).map((article) => (
                     <Link
                       key={article.slug}
                       href={`/analysis/${article.slug}`}
@@ -405,7 +405,7 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
-                  {learningArticles.slice(0, 2).map((article) => (
+                  {getAllLearningArticles().slice(0, 2).map((article) => (
                     <Link
                       key={article.slug}
                       href={`/learning/${article.slug}`}

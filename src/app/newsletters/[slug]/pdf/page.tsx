@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import PDFWrapper from '@/components/pdf/PDFWrapper';
-import { getNewsletter, newsletters } from '@/lib/data';
+import { getNewsletter, getAllNewsletters } from '@/lib/merged-data';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  return newsletters.map((n) => ({
+  return getAllNewsletters().map((n) => ({
     slug: n.slug,
   }));
 }

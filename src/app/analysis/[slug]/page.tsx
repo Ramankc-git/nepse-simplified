@@ -6,7 +6,8 @@ import { Footer } from "@/components/layout/Footer";
 import { AdPlaceholder } from "@/components/common/AdPlaceholder";
 import { ContentRenderer } from "@/components/common/ContentRenderer";
 import ShareLinks from "@/components/common/ShareLinks";
-import { analysisArticles, getAnalysisArticle, type ContentBlock } from "@/lib/data";
+import { getAllAnalysisArticles, getAnalysisArticle } from "@/lib/merged-data";
+import type { ContentBlock } from "@/lib/data";
 import {
   ArrowLeft,
   Calendar,
@@ -44,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export function generateStaticParams() {
-  return analysisArticles.map((article) => ({
+  return getAllAnalysisArticles().map((article) => ({
     slug: article.slug,
   }));
 }

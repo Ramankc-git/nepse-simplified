@@ -1,9 +1,9 @@
-import { newsletters } from '@/lib/data';
+import { getAllNewsletters } from '@/lib/merged-data';
 
 export async function GET() {
   const siteUrl = process.env.SITE_URL || 'https://nepsesimplified.com';
 
-  const rssItems = newsletters
+  const rssItems = getAllNewsletters()
     .map((nl) => `
     <item>
       <title><![CDATA[NEPSE SIMPLIFIED ${nl.volume} — ${nl.dateRange}]]></title>

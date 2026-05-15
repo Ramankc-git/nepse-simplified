@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Calendar, TrendingUp, TrendingDown, BarChart3 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { newsletters } from "@/lib/data";
+import { getAllNewsletters } from "@/lib/merged-data";
 
 export default function NewslettersPage() {
   return (
@@ -32,7 +32,7 @@ export default function NewslettersPage() {
         {/* Newsletter List */}
         <div className="max-w-6xl mx-auto px-6 py-12 sm:py-16">
           <div className="space-y-6">
-            {newsletters.map((newsletter, index) => (
+            {getAllNewsletters().map((newsletter, index) => (
               <Link
                 key={newsletter.slug}
                 href={`/newsletters/${newsletter.slug}`}

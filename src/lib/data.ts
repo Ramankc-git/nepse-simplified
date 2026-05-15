@@ -747,7 +747,7 @@ export function getArchivedEvents(): MarketEvent[] {
   return marketEvents.filter((e) => getEventEffectiveStatus(e) === 'closed');
 }
 
-// Helper functions
+// Helper functions (for backward compatibility; prefer merged-data.ts for CMS content)
 export function getNewsletter(slug: string): NewsletterData | undefined {
   return newsletters.find((n) => n.slug === slug);
 }
