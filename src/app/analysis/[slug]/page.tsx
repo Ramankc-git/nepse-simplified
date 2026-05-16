@@ -206,22 +206,23 @@ export default async function AnalysisArticlePage({ params }: PageProps) {
                     blocks={nonMetricBlocks.slice(0, secondHeadingIdx)}
                   />
 
-                  {/* Metrics grid after first section */}
+                  {/* Metrics card after first section */}
                   {metrics.length > 0 && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-8">
-                      {metrics.slice(0, 4).map((metric, i) => (
-                        <div
-                          key={i}
-                          className="bg-slate-50 rounded-xl border border-slate-200 p-4"
-                        >
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                            {metric.label}
-                          </p>
-                          <p className="text-lg font-bold text-[#0a2141]">
-                            {metric.value}
-                          </p>
-                        </div>
-                      ))}
+                    <div className="bg-slate-50 rounded-2xl border border-slate-200 p-6 my-8">
+                      <div className="flex items-center gap-2 mb-4">
+                        <TrendingUp className="w-4 h-4 text-slate-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                          Key Metrics
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3">
+                        {metrics.map((metric, i) => (
+                          <div key={i} className="flex items-baseline justify-between gap-2">
+                            <span className="text-xs text-slate-500 shrink-0">{metric.label}</span>
+                            <span className="text-sm font-bold text-[#0a2141] text-right">{metric.value}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 
@@ -239,22 +240,23 @@ export default async function AnalysisArticlePage({ params }: PageProps) {
                 <ContentRenderer blocks={nonMetricBlocks} />
               )}
 
-              {/* Remaining metrics (if more than 4) */}
-              {metrics.length > 4 && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-8">
-                  {metrics.slice(4).map((metric, i) => (
-                    <div
-                      key={`extra-${i}`}
-                      className="bg-slate-50 rounded-xl border border-slate-200 p-4"
-                    >
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
-                        {metric.label}
-                      </p>
-                      <p className="text-lg font-bold text-[#0a2141]">
-                        {metric.value}
-                      </p>
-                    </div>
-                  ))}
+              {/* Remaining metrics (if more than 6) */}
+              {metrics.length > 6 && (
+                <div className="bg-slate-50 rounded-2xl border border-slate-200 p-6 my-8">
+                  <div className="flex items-center gap-2 mb-4">
+                    <TrendingUp className="w-4 h-4 text-slate-400" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                      More Metrics
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3">
+                    {metrics.slice(6).map((metric, i) => (
+                      <div key={`extra-${i}`} className="flex items-baseline justify-between gap-2">
+                        <span className="text-xs text-slate-500 shrink-0">{metric.label}</span>
+                        <span className="text-sm font-bold text-[#0a2141] text-right">{metric.value}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

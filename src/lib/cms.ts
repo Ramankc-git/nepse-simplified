@@ -397,10 +397,21 @@ function parseMarkdownToContentBlocks(markdown: string): ContentBlock[] {
     if (!trimmed.startsWith("#") && !trimmed.startsWith(">") && !trimmed.startsWith("- ") && !trimmed.startsWith("* ")) {
       flushList();
 
-      // Check for metric pattern: **Label:** Value
+      // Check for metric pattern: **Label:** Value (may contain **Label2:** Value2 | ...)
       const metricMatch = trimmed.match(/^\*\*(.+?):\*\*\s*(.+)/);
       if (metricMatch) {
-        blocks.push({ type: "metric", label: metricMatch[1].trim(), value: metricMatch[2].trim() });
+        // Split on pipe separators and extract individual **Label:** Value pairs
+        const rawValue = metricMatch[2].trim();
+        const parts = rawValue.split(/\s*\|\s*/);
+        // First metric from the initial match
+        blocks.push({ type: "metric", label: metricMatch[1].trim(), value: parts[0].replace(/\*\*/g, "").trim() });
+        // Remaining parts may contain **Label:** Value pairs
+        for (let p = 1; p < parts.length; p++) {
+          const subMatch = parts[p].match(/^\*\*(.+?):\*\*\s*(.+)/);
+          if (subMatch) {
+            blocks.push({ type: "metric", label: subMatch[1].trim(), value: subMatch[2].replace(/\*\*/g, "").trim() });
+          }
+        }
         i++;
         continue;
       }
