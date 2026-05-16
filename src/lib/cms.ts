@@ -518,7 +518,7 @@ export function getCmsAnalysisArticles(): AnalysisArticle[] {
     summary: item.frontmatter.summary || "",
     tags: item.frontmatter.tags || [],
     readTime: item.frontmatter.readTime || "5 min read",
-    content: parseMarkdownToContentBlocks(item.content),
+    content: parseMarkdownToContentBlocks(item.frontmatter.body || item.content),
   }));
 }
 
@@ -535,7 +535,7 @@ export function getCmsLearningArticles(): LearningArticle[] {
     summary: item.frontmatter.summary || "",
     tags: item.frontmatter.tags || [],
     readTime: item.frontmatter.readTime || "5 min read",
-    content: parseMarkdownToContentBlocks(item.content),
+    content: parseMarkdownToContentBlocks(item.frontmatter.body || item.content),
   }));
 }
 
