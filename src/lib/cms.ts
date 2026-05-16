@@ -10,7 +10,6 @@ import type {
   PestleItem,
   WatchlistStock,
 } from "./data";
-import type { MarketDataResult } from "./nepse-api";
 
 const contentDir = path.join(process.cwd(), "content");
 
@@ -424,11 +423,23 @@ function parseMarkdownToContentBlocks(markdown: string): ContentBlock[] {
 
 // ==================== MARKET DATA PARSER ====================
 
+interface CmsMarketData {
+  timestamp: string;
+  nepseIndex: { value: number; change: number; changePercent: number };
+  turnover: number;
+  turnoverChange: number;
+  topGainers: { symbol: string; name: string; ltp: number; change: number; changePercent: number; volume: number }[];
+  topLosers: { symbol: string; name: string; ltp: number; change: number; changePercent: number; volume: number }[];
+  sectorIndices: { name: string; index: number; change: number; changePercent: number }[];
+  source: "manual";
+  dataSource: string;
+}
+
 /**
- * Parse CMS market-data markdown files into MarketDataResult format.
+ * Parse CMS market-data markdown files into market data format.
  * Returns the most recent published week's data, or null if none exist.
  */
-export function getCmsMarketData(): MarketDataResult | null {
+export function getCmsMarketData(): CmsMarketData | null {
   const items = readContentFolder("market-data");
   if (items.length === 0) return null;
 
@@ -479,7 +490,7 @@ export function getCmsMarketData(): MarketDataResult | null {
     sectorIndices,
     source: "manual" as const,
     dataSource: `CMS data (week ending ${fm.weekEnding || "unknown"})`,
-  };
+  } as CmsMarketData;
 }
 
 // ==================== PUBLIC API ====================

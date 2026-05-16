@@ -37,9 +37,19 @@ export async function GET(request: Request) {
       );
     }
 
+    // Priority 1: Check CMS for latest weekly market data (server-only)
+    try {
+      const { getCmsMarketData } = await import('@/lib/cms');
+      const cmsData = getCmsMarketData();
+      if (cmsData) return NextResponse.json(cmsData);
+    } catch {
+      // CMS not available, continue to API
+    }
+
+    // Priority 2: Try external APIs, then fallback sample data
     const data = await fetchMarketData();
     return NextResponse.json(data);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to fetch market data', timestamp: new Date().toISOString() },
       { status: 500 }
