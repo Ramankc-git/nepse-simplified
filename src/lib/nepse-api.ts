@@ -107,7 +107,17 @@ function getSampleMarketData(): MarketDataResult {
 }
 
 export async function fetchMarketData(): Promise<MarketDataResult> {
-  // Try each configured API source with a short timeout
+  // Priority 1: Check CMS for latest weekly market data
+  try {
+    // Dynamic import to avoid circular dependency — cms.ts imports types from here
+    const { getCmsMarketData } = await import("./cms");
+    const cmsData = getCmsMarketData();
+    if (cmsData) return cmsData;
+  } catch {
+    // CMS not available, continue to API
+  }
+
+  // Priority 2: Try each configured API source with a short timeout
   for (const api of NEPSE_APIS) {
     try {
       const controller = new AbortController();
@@ -189,8 +199,20 @@ export async function fetchMarketData(): Promise<MarketDataResult> {
   return getSampleMarketData();
 }
 
-// Weekly turnover trend data for charts (based on Vol. 001 and Vol. 002)
+// Weekly turnover trend data — reads from CMS market data or falls back to hardcoded
 export function getWeeklyTurnoverTrend() {
+  try {
+    // Dynamic import to avoid circular dependency
+    const { getCmsMarketData } = require("./cms");
+    const cmsData = getCmsMarketData();
+    if (cmsData) {
+      // Build trend from CMS data (just the latest week for now)
+      return [{ week: `Week ending ${cmsData.timestamp}`, turnover: cmsData.turnover }];
+    }
+  } catch {
+    // Fall through to sample data
+  }
+
   return [
     { week: "Week 1 (Apr)", turnover: 21.18 },
     { week: "Week 2 (May)", turnover: 17.12 },

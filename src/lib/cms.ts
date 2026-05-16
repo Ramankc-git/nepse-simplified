@@ -10,6 +10,7 @@ import type {
   PestleItem,
   WatchlistStock,
 } from "./data";
+import type { MarketDataResult } from "./nepse-api";
 
 const contentDir = path.join(process.cwd(), "content");
 
@@ -419,6 +420,66 @@ function parseMarkdownToContentBlocks(markdown: string): ContentBlock[] {
 
   flushList();
   return blocks;
+}
+
+// ==================== MARKET DATA PARSER ====================
+
+/**
+ * Parse CMS market-data markdown files into MarketDataResult format.
+ * Returns the most recent published week's data, or null if none exist.
+ */
+export function getCmsMarketData(): MarketDataResult | null {
+  const items = readContentFolder("market-data");
+  if (items.length === 0) return null;
+
+  // Get the latest (newest first from readContentFolder)
+  const latest = items[0];
+  const fm = latest.frontmatter;
+
+  const topGainers = (fm.topGainers || []).slice(0, 5).map((s: Record<string, unknown>) => ({
+    symbol: String(s.symbol || ""),
+    name: String(s.name || ""),
+    ltp: Number(s.ltp || 0),
+    change: Number(s.change || 0),
+    changePercent: Number(s.changePercent || 0),
+    open: 0, high: 0, low: 0,
+    volume: Number(s.volume || 0),
+    turnover: 0,
+  }));
+
+  const topLosers = (fm.topLosers || []).slice(0, 5).map((s: Record<string, unknown>) => ({
+    symbol: String(s.symbol || ""),
+    name: String(s.name || ""),
+    ltp: Number(s.ltp || 0),
+    change: Number(s.change || 0),
+    changePercent: Number(s.changePercent || 0),
+    open: 0, high: 0, low: 0,
+    volume: Number(s.volume || 0),
+    turnover: 0,
+  }));
+
+  const sectorIndices = (fm.sectorIndices || []).map((s: Record<string, unknown>) => ({
+    name: String(s.name || ""),
+    index: Number(s.index || 0),
+    change: Number(s.change || 0),
+    changePercent: Number(s.changePercent || 0),
+  }));
+
+  return {
+    timestamp: fm.weekEnding || new Date().toISOString(),
+    nepseIndex: {
+      value: Number(fm.nepseIndex || 0),
+      change: Number(fm.indexChange || 0),
+      changePercent: Number(fm.indexChangePercent || 0),
+    },
+    turnover: Number(fm.weeklyTurnover || 0),
+    turnoverChange: Number(fm.turnoverChange || 0),
+    topGainers,
+    topLosers,
+    sectorIndices,
+    source: "manual" as const,
+    dataSource: `CMS data (week ending ${fm.weekEnding || "unknown"})`,
+  };
 }
 
 // ==================== PUBLIC API ====================

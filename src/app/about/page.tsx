@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import {
@@ -17,6 +18,19 @@ import {
   Users,
   Info,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "About Us | NEPSE SIMPLIFIED",
+  description:
+    "Learn about NEPSE SIMPLIFIED — our mission to demystify Nepal's stock market through clear, unbiased, and actionable investment insights for every investor.",
+  openGraph: {
+    title: "About Us | NEPSE SIMPLIFIED",
+    description:
+      "Our mission to demystify Nepal's stock market through clear, unbiased, and actionable investment insights.",
+    url: "https://nepsesimplified.com/about",
+  },
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   return (

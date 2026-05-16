@@ -1,8 +1,22 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowRight, Calendar, TrendingUp, TrendingDown, BarChart3 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { getAllNewsletters } from "@/lib/merged-data";
+
+export const metadata: Metadata = {
+  title: "Weekly Newsletters | NEPSE SIMPLIFIED",
+  description:
+    "Browse all editions of the NEPSE SIMPLIFIED weekly newsletter. Catch up on past market analysis, sector performance, top gainers & losers, and investment insights.",
+  openGraph: {
+    title: "Weekly Newsletters | NEPSE SIMPLIFIED",
+    description:
+      "All editions of the NEPSE SIMPLIFIED weekly newsletter — market analysis, sector performance, and investment insights.",
+    url: "https://nepsesimplified.com/newsletters",
+  },
+  alternates: { canonical: "/newsletters" },
+};
 
 // Revalidate every hour so new CMS content appears automatically
 export const revalidate = 3600;

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   TrendingUp,
   TrendingDown,
@@ -25,6 +26,20 @@ import {
   getAllMarketEvents,
   getEventEffectiveStatus,
 } from "@/lib/merged-data";
+
+export const metadata: Metadata = {
+  title: "NEPSE SIMPLIFIED | Understand • Interpret • Invest Smart",
+  description:
+    "Nepal's leading free weekly stock market newsletter. Get NEPSE analysis, sector performance, top gainers & losers, IPO updates, and investment education — simplified for every investor.",
+  openGraph: {
+    title: "NEPSE SIMPLIFIED | Understand • Interpret • Invest Smart",
+    description:
+      "Nepal's leading free weekly stock market newsletter. NEPSE analysis, sector performance, top gainers & losers, IPO updates, and investment education.",
+    type: "website",
+    url: "https://nepsesimplified.com",
+  },
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   const latestNewsletter = getLatestNewsletter();

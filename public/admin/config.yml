@@ -57,6 +57,50 @@ collections:
       - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "draft" }
       - { label: "Body Content", name: "body", widget: "markdown" }
 
+  # ===================== WEEKLY MARKET DATA =====================
+  - name: "market-data"
+    label: "Weekly Market Data"
+    folder: "content/market-data"
+    create: true
+    slug: "week-{{weekEnding}}"
+    summary: "Week ending {{weekEnding}}"
+    fields:
+      - { label: "Week Ending", name: "weekEnding", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "NEPSE Index", name: "nepseIndex", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Index Change (points)", name: "indexChange", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Index Change (%)", name: "indexChangePercent", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Weekly Turnover (Rs. Billion)", name: "weeklyTurnover", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Turnover Change (%)", name: "turnoverChange", widget: "number", value_type: "float", step: 0.01, required: false }
+      - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "draft" }
+      - label: "Top Gainers"
+        name: "topGainers"
+        widget: "list"
+        fields:
+          - { label: "Symbol", name: "symbol", widget: "string" }
+          - { label: "Company Name", name: "name", widget: "string" }
+          - { label: "LTP (Rs.)", name: "ltp", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (Rs.)", name: "change", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (%)", name: "changePercent", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Volume", name: "volume", widget: "number", required: false }
+      - label: "Top Losers"
+        name: "topLosers"
+        widget: "list"
+        fields:
+          - { label: "Symbol", name: "symbol", widget: "string" }
+          - { label: "Company Name", name: "name", widget: "string" }
+          - { label: "LTP (Rs.)", name: "ltp", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (Rs.)", name: "change", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (%)", name: "changePercent", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Volume", name: "volume", widget: "number", required: false }
+      - label: "Sector Indices"
+        name: "sectorIndices"
+        widget: "list"
+        fields:
+          - { label: "Sector Name", name: "name", widget: "string" }
+          - { label: "Index Value", name: "index", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Change (points)", name: "change", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Change (%)", name: "changePercent", widget: "number", value_type: "float", step: 0.01 }
+
   # ===================== MARKET EVENTS =====================
   - name: "events"
     label: "Market Events"
