@@ -37,7 +37,7 @@ export function AdPlaceholder({
   size = "banner",
   className = "",
 }: AdPlaceholderProps) {
-  const adRef = useRef<HTMLDivElement>(null);
+  const adRef = useRef<HTMLModElement>(null);
   const config = sizeConfig[size];
   const isAdEnabled = Boolean(ADSENSE_CLIENT_ID && config.adSlot);
 
