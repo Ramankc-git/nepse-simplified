@@ -397,23 +397,26 @@ function parseMarkdownToContentBlocks(markdown: string): ContentBlock[] {
     if (!trimmed.startsWith("#") && !trimmed.startsWith(">") && !trimmed.startsWith("- ") && !trimmed.startsWith("* ")) {
       flushList();
 
-      // Check for metric pattern: **Label:** Value (may contain **Label2:** Value2 | ...)
+      // Check for metric pattern: **Label:** Value (must be concise, not a paragraph)
       const metricMatch = trimmed.match(/^\*\*(.+?):\*\*\s*(.+)/);
       if (metricMatch) {
-        // Split on pipe separators and extract individual **Label:** Value pairs
         const rawValue = metricMatch[2].trim();
-        const parts = rawValue.split(/\s*\|\s*/);
-        // First metric from the initial match
-        blocks.push({ type: "metric", label: metricMatch[1].trim(), value: parts[0].replace(/\*\*/g, "").trim() });
-        // Remaining parts may contain **Label:** Value pairs
-        for (let p = 1; p < parts.length; p++) {
-          const subMatch = parts[p].match(/^\*\*(.+?):\*\*\s*(.+)/);
-          if (subMatch) {
-            blocks.push({ type: "metric", label: subMatch[1].trim(), value: subMatch[2].replace(/\*\*/g, "").trim() });
+        // Only treat as metric if the entire line is short (< 100 chars) —
+        // long lines like "**Fee Income:** One of the standout metrics..."
+        // are paragraphs, not metrics
+        if (trimmed.length < 100) {
+          const parts = rawValue.split(/\s*\|\s*/);
+          blocks.push({ type: "metric", label: metricMatch[1].trim(), value: parts[0].replace(/\*\*/g, "").trim() });
+          for (let p = 1; p < parts.length; p++) {
+            const subMatch = parts[p].match(/^\*\*(.+?):\*\*\s*(.+)/);
+            if (subMatch) {
+              blocks.push({ type: "metric", label: subMatch[1].trim(), value: subMatch[2].replace(/\*\*/g, "").trim() });
+            }
           }
+          i++;
+          continue;
         }
-        i++;
-        continue;
+        // Fall through to paragraph if too long
       }
 
       // Regular paragraph (merge consecutive non-special lines)
