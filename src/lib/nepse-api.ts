@@ -102,7 +102,7 @@ function getSampleMarketData(): MarketDataResult {
       { name: "Others", index: 567.89, change: -2.84, changePercent: -0.5 },
     ],
     source: "manual" as const,
-    dataSource: "Sample data (Vol. 002) — edit src/lib/nepse-api.ts to update, or connect a real API endpoint for live data",
+    dataSource: "Derived from Vol. 002 newsletter data (week ending May 15, 2026)",
   };
 }
 

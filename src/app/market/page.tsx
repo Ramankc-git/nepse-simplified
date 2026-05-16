@@ -16,7 +16,6 @@ import {
   Clock,
   AlertCircle,
   Activity,
-  Zap,
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -161,14 +160,14 @@ export default function MarketPage() {
             <div className="flex items-center gap-3 mb-3">
               <BarChart3 className="w-6 h-6 text-green-400" />
               <span className="text-[9px] uppercase font-black tracking-widest text-white/50">
-                Live Market Overview
+                Weekly Comparison
               </span>
             </div>
             <h1 className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
               Market Data
             </h1>
             <p className="text-sm text-white/60 leading-relaxed max-w-xl">
-              Real-time NEPSE index, top gainers &amp; losers, and sector performance — updated throughout trading hours.
+              Weekly NEPSE index comparison, top gainers &amp; losers, and sector performance — updated every Friday.
             </p>
           </div>
         </section>
@@ -180,8 +179,8 @@ export default function MarketPage() {
               <div className="flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <p className="text-sm text-amber-800 leading-relaxed">
-                  <span className="font-semibold">Market Closed</span> — NEPSE trades Sunday–Thursday, 11:00 AM – 3:00 PM NST.
-                  Data shown is from the last trading session.
+                  <span className="font-semibold">Market Closed</span> — NEPSE trades Sunday–Friday, 11:00 AM – 3:00 PM NST.
+                  Data shown is from the last weekly comparison.
                 </p>
               </div>
             </div>
@@ -240,18 +239,15 @@ export default function MarketPage() {
                   </button>
                 </div>
 
-                {/* Manual Data Notice */}
+                {/* Data Source Notice */}
                 {data.source === 'manual' && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5">
                     <div className="flex items-start gap-3">
-                      <Zap className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                      <BarChart3 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <p className="text-sm font-semibold text-amber-800">Static Data — Updated Weekly</p>
-                        <p className="text-sm text-amber-700 mt-1 leading-relaxed">
-                          NEPSE&apos;s official API requires authentication and is not publicly accessible for free.
-                          Market data shown below is updated manually each week. To update the data, edit
-                          the <code className="px-1.5 py-0.5 bg-amber-100 rounded text-xs font-mono">src/lib/nepse-api.ts</code> file
-                          in the codebase and redeploy.
+                        <p className="text-sm font-semibold text-blue-800">Derived from Sample Data</p>
+                        <p className="text-sm text-blue-700 mt-1 leading-relaxed">
+                          {data.dataSource}
                         </p>
                       </div>
                     </div>
@@ -306,7 +302,7 @@ export default function MarketPage() {
                     </div>
                     <div className="sm:ml-auto">
                       <span className="text-[9px] uppercase font-black tracking-widest text-slate-400 block mb-1">
-                        Daily Turnover
+                        Weekly Turnover
                       </span>
                       <span className="font-heading text-xl sm:text-2xl font-bold text-[#0a2141] dark:text-white">
                         Rs. {formatNumber(data.turnover)}B
