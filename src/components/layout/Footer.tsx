@@ -5,6 +5,7 @@ import Image from "next/image";
 const quickLinks = [
   { label: "Latest Newsletters", href: "/newsletters" },
   { label: "Market Overview", href: "/market" },
+  { label: "Stock Scorecard", href: "/scorecard" },
   { label: "Learning Hub", href: "/learning" },
   { label: "Analysis & Reports", href: "/analysis" },
   { label: "Upcoming Events", href: "/events" },

@@ -100,6 +100,140 @@ export interface MarketEvent {
   details: string;
 }
 
+// ==================== SCORECARD TYPES ====================
+
+export type ScorecardSector =
+  | "Banking"
+  | "Manufacturing"
+  | "Investment"
+  | "Insurance"
+  | "Hydro"
+  | "Finance"
+  | "Microfinance"
+  | "Trading"
+  | "Others";
+
+export interface ScorecardMetricScore {
+  score: number; // 0-10
+  notes: string;
+}
+
+export interface ScorecardStock {
+  symbol: string;
+  name: string;
+  sector: ScorecardSector;
+  ltp: number;
+  status: "published" | "draft";
+  headwind: ScorecardMetricScore;
+  fundamentals: ScorecardMetricScore;
+  growth: ScorecardMetricScore;
+  eps: ScorecardMetricScore;
+  regulatory: ScorecardMetricScore;
+  promoter: ScorecardMetricScore;
+  dividend: ScorecardMetricScore;
+  pros: string[];
+  cons: string[];
+  analystView: string;
+}
+
+/** The 7 scoring metric keys in display order */
+export const SCORECARD_METRICS = [
+  "headwind",
+  "fundamentals",
+  "growth",
+  "eps",
+  "regulatory",
+  "promoter",
+  "dividend",
+] as const;
+
+export type ScorecardMetricKey = (typeof SCORECARD_METRICS)[number];
+
+/** Default weights for the scorecard algorithm */
+export const DEFAULT_WEIGHTS: Record<ScorecardMetricKey, number> = {
+  headwind: 12,
+  fundamentals: 18,
+  growth: 15,
+  eps: 16,
+  regulatory: 10,
+  promoter: 14,
+  dividend: 15,
+};
+
+/** Verdict classification based on percentage score */
+export type Verdict = "Strong Buy" | "Buy" | "Watchlist" | "Avoid";
+
+export function getVerdict(percentage: number): Verdict {
+  if (percentage >= 78) return "Strong Buy";
+  if (percentage >= 58) return "Buy";
+  if (percentage >= 45) return "Watchlist";
+  return "Avoid";
+}
+
+export function getVerdictColor(verdict: Verdict): string {
+  switch (verdict) {
+    case "Strong Buy": return "text-emerald-600 bg-emerald-50 border-emerald-200";
+    case "Buy": return "text-green-600 bg-green-50 border-green-200";
+    case "Watchlist": return "text-amber-600 bg-amber-50 border-amber-200";
+    case "Avoid": return "text-red-600 bg-red-50 border-red-200";
+  }
+}
+
+export function getVerdictDarkColor(verdict: Verdict): string {
+  switch (verdict) {
+    case "Strong Buy": return "dark:text-emerald-400 dark:bg-emerald-950/50 dark:border-emerald-800";
+    case "Buy": return "dark:text-green-400 dark:bg-green-950/50 dark:border-green-800";
+    case "Watchlist": return "dark:text-amber-400 dark:bg-amber-950/50 dark:border-amber-800";
+    case "Avoid": return "dark:text-red-400 dark:bg-red-950/50 dark:border-red-800";
+  }
+}
+
+/** Calculate weighted score for a stock given custom weights */
+export function calculateWeightedScore(
+  stock: ScorecardStock,
+  weights: Record<ScorecardMetricKey, number>
+): { weightedScore: number; maxPossible: number; percentage: number; verdict: Verdict } {
+  let weightedScore = 0;
+  let maxPossible = 0;
+
+  for (const metric of SCORECARD_METRICS) {
+    const weight = weights[metric];
+    const score = stock[metric].score;
+    weightedScore += score * weight;
+    maxPossible += 10 * weight;
+  }
+
+  const percentage = maxPossible > 0 ? (weightedScore / maxPossible) * 100 : 0;
+  return {
+    weightedScore,
+    maxPossible,
+    percentage: Math.round(percentage * 10) / 10,
+    verdict: getVerdict(percentage),
+  };
+}
+
+/** Metric display names */
+export const METRIC_LABELS: Record<ScorecardMetricKey, string> = {
+  headwind: "Headwind",
+  fundamentals: "Fundamentals",
+  growth: "Growth",
+  eps: "EPS",
+  regulatory: "Regulatory",
+  promoter: "Promoter",
+  dividend: "Dividend",
+};
+
+/** Metric descriptions for tooltips */
+export const METRIC_DESCRIPTIONS: Record<ScorecardMetricKey, string> = {
+  headwind: "Market & macro conditions affecting the stock",
+  fundamentals: "Balance sheet strength, ROE, debt levels",
+  growth: "Revenue and profit growth trajectory",
+  eps: "Earnings per share quality and consistency",
+  regulatory: "Favorability of the regulatory environment",
+  promoter: "Promoter quality, holding, and track record",
+  dividend: "Dividend history and yield consistency",
+};
+
 // ==================== SAMPLE DATA ====================
 
 export const newsletters: NewsletterData[] = [
@@ -721,6 +855,9 @@ export const marketEvents: MarketEvent[] = [
 ];
 
 // ==================== EVENT STATUS HELPERS ====================
+
+// Empty fallback for scorecard stocks — CMS content is the primary source
+export const scorecardStocks: ScorecardStock[] = [];
 
 /**
  * Compute the effective status of an event based on current date.

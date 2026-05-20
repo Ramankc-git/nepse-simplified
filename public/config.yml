@@ -57,6 +57,50 @@ collections:
       - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "draft" }
       - { label: "Body Content", name: "body", widget: "markdown" }
 
+  # ===================== WEEKLY MARKET DATA =====================
+  - name: "market-data"
+    label: "Weekly Market Data"
+    folder: "content/market-data"
+    create: true
+    slug: "week-{{weekEnding}}"
+    summary: "Week ending {{weekEnding}}"
+    fields:
+      - { label: "Week Ending", name: "weekEnding", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "NEPSE Index", name: "nepseIndex", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Index Change (points)", name: "indexChange", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Index Change (%)", name: "indexChangePercent", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Weekly Turnover (Rs. Billion)", name: "weeklyTurnover", widget: "number", value_type: "float", step: 0.01 }
+      - { label: "Turnover Change (%)", name: "turnoverChange", widget: "number", value_type: "float", step: 0.01, required: false }
+      - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "draft" }
+      - label: "Top Gainers"
+        name: "topGainers"
+        widget: "list"
+        fields:
+          - { label: "Symbol", name: "symbol", widget: "string" }
+          - { label: "Company Name", name: "name", widget: "string" }
+          - { label: "LTP (Rs.)", name: "ltp", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (Rs.)", name: "change", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (%)", name: "changePercent", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Volume", name: "volume", widget: "number", required: false }
+      - label: "Top Losers"
+        name: "topLosers"
+        widget: "list"
+        fields:
+          - { label: "Symbol", name: "symbol", widget: "string" }
+          - { label: "Company Name", name: "name", widget: "string" }
+          - { label: "LTP (Rs.)", name: "ltp", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (Rs.)", name: "change", widget: "number", value_type: "float", step: 0.1 }
+          - { label: "Change (%)", name: "changePercent", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Volume", name: "volume", widget: "number", required: false }
+      - label: "Sector Indices"
+        name: "sectorIndices"
+        widget: "list"
+        fields:
+          - { label: "Sector Name", name: "name", widget: "string" }
+          - { label: "Index Value", name: "index", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Change (points)", name: "change", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Change (%)", name: "changePercent", widget: "number", value_type: "float", step: 0.01 }
+
   # ===================== MARKET EVENTS =====================
   - name: "events"
     label: "Market Events"
@@ -72,3 +116,40 @@ collections:
       - { label: "End Date", name: "endDate", widget: "datetime", format: "YYYY-MM-DD" }
       - { label: "Status", name: "status", widget: "select", options: ["upcoming", "open", "closed"] }
       - { label: "Details", name: "details", widget: "text" }
+
+  # ===================== SCORECARD STOCKS =====================
+  - name: "scorecard-stocks"
+    label: "Scorecard Stocks"
+    folder: "content/scorecard-stocks"
+    create: true
+    slug: "{{symbol}}"
+    summary: "{{symbol}} — {{name}} ({{sector}})"
+    fields:
+      - { label: "Symbol", name: "symbol", widget: "string" }
+      - { label: "Company Name", name: "name", widget: "string" }
+      - { label: "Sector", name: "sector", widget: "select", options: ["Banking", "Manufacturing", "Investment", "Insurance", "Hydro", "Finance", "Microfinance", "Trading", "Others"] }
+      - { label: "LTP (Rs.)", name: "ltp", widget: "number", value_type: "float", step: 0.1 }
+      - { label: "Status", name: "status", widget: "select", options: ["published", "draft"], default: "published" }
+      - { label: "Headwind Score (0-10)", name: "headwindScore", widget: "number", value_type: "int", min: 0, max: 10, default: 5 }
+      - { label: "Headwind Notes", name: "headwindNotes", widget: "string", required: false }
+      - { label: "Fundamentals Score (0-10)", name: "fundamentalsScore", widget: "number", value_type: "int", min: 0, max: 10, default: 5 }
+      - { label: "Fundamentals Notes", name: "fundamentalsNotes", widget: "string", required: false }
+      - { label: "Growth Score (0-10)", name: "growthScore", widget: "number", value_type: "int", min: 0, max: 10, default: 5 }
+      - { label: "Growth Notes", name: "growthNotes", widget: "string", required: false }
+      - { label: "EPS Score (0-10)", name: "epsScore", widget: "number", value_type: "int", min: 0, max: 10, default: 5 }
+      - { label: "EPS Notes", name: "epsNotes", widget: "string", required: false }
+      - { label: "Regulatory Score (0-10)", name: "regulatoryScore", widget: "number", value_type: "int", min: 0, max: 10, default: 5 }
+      - { label: "Regulatory Notes", name: "regulatoryNotes", widget: "string", required: false }
+      - { label: "Promoter Score (0-10)", name: "promoterScore", widget: "number", value_type: "int", min: 0, max: 10, default: 5 }
+      - { label: "Promoter Notes", name: "promoterNotes", widget: "string", required: false }
+      - { label: "Dividend Score (0-10)", name: "dividendScore", widget: "number", value_type: "int", min: 0, max: 10, default: 5 }
+      - { label: "Dividend Notes", name: "dividendNotes", widget: "string", required: false }
+      - label: "Pros"
+        name: "pros"
+        widget: "list"
+        field: { label: "Pro", name: "pro", widget: "string" }
+      - label: "Cons"
+        name: "cons"
+        widget: "list"
+        field: { label: "Con", name: "con", widget: "string" }
+      - { label: "Analyst View", name: "analystView", widget: "markdown" }

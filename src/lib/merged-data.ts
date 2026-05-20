@@ -6,17 +6,20 @@ import {
   getCmsAnalysisArticles,
   getCmsLearningArticles,
   getCmsMarketEvents,
+  getCmsScorecardStocks,
 } from "./cms";
 import {
   newsletters,
   analysisArticles,
   learningArticles,
   marketEvents,
+  scorecardStocks,
   getEventEffectiveStatus,
   type NewsletterData,
   type AnalysisArticle,
   type LearningArticle,
   type MarketEvent,
+  type ScorecardStock,
 } from "./data";
 
 // ==================== MERGE HELPERS ====================
@@ -90,6 +93,11 @@ export function getActiveEvents(): MarketEvent[] {
 /** Get archived (closed) events. */
 export function getArchivedEvents(): MarketEvent[] {
   return getAllMarketEvents().filter((e) => getEventEffectiveStatus(e) === "closed");
+}
+
+/** All scorecard stocks — CMS wins on symbol, then hardcoded fallback. */
+export function getAllScorecardStocks(): ScorecardStock[] {
+  return mergeByKey(scorecardStocks, getCmsScorecardStocks(), "symbol");
 }
 
 /** Re-export event status helper. */

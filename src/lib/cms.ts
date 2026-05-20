@@ -6,6 +6,8 @@ import type {
   AnalysisArticle,
   LearningArticle,
   MarketEvent,
+  ScorecardStock,
+  ScorecardSector,
   ContentBlock,
   PestleItem,
   WatchlistStock,
@@ -580,4 +582,66 @@ export function hasCmsContent(): boolean {
     const dir = path.join(contentDir, folder);
     return fs.statSync(dir).isDirectory() && fs.readdirSync(dir).length > 0;
   });
+}
+
+// ==================== SCORECARD STOCKS PARSER ====================
+
+const VALID_SECTORS: ScorecardSector[] = [
+  "Banking", "Manufacturing", "Investment", "Insurance",
+  "Hydro", "Finance", "Microfinance", "Trading", "Others",
+];
+
+/**
+ * Parse CMS scorecard-stocks markdown files into ScorecardStock[].
+ * Returns only published stocks, sorted alphabetically by symbol.
+ */
+export function getCmsScorecardStocks(): ScorecardStock[] {
+  const items = readContentFolder("scorecard-stocks");
+
+  return items
+    .map((item): ScorecardStock => {
+      const fm = item.frontmatter;
+      const sector = (VALID_SECTORS.includes(fm.sector) ? fm.sector : "Others") as ScorecardSector;
+
+      return {
+        symbol: String(fm.symbol || item.slug).toUpperCase(),
+        name: String(fm.name || item.slug),
+        sector,
+        ltp: Number(fm.ltp || 0),
+        status: (fm.status === "draft" ? "draft" : "published") as "published" | "draft",
+        headwind: {
+          score: Math.min(10, Math.max(0, Number(fm.headwindScore || 5))),
+          notes: String(fm.headwindNotes || ""),
+        },
+        fundamentals: {
+          score: Math.min(10, Math.max(0, Number(fm.fundamentalsScore || 5))),
+          notes: String(fm.fundamentalsNotes || ""),
+        },
+        growth: {
+          score: Math.min(10, Math.max(0, Number(fm.growthScore || 5))),
+          notes: String(fm.growthNotes || ""),
+        },
+        eps: {
+          score: Math.min(10, Math.max(0, Number(fm.epsScore || 5))),
+          notes: String(fm.epsNotes || ""),
+        },
+        regulatory: {
+          score: Math.min(10, Math.max(0, Number(fm.regulatoryScore || 5))),
+          notes: String(fm.regulatoryNotes || ""),
+        },
+        promoter: {
+          score: Math.min(10, Math.max(0, Number(fm.promoterScore || 5))),
+          notes: String(fm.promoterNotes || ""),
+        },
+        dividend: {
+          score: Math.min(10, Math.max(0, Number(fm.dividendScore || 5))),
+          notes: String(fm.dividendNotes || ""),
+        },
+        pros: Array.isArray(fm.pros) ? fm.pros.map(String) : [],
+        cons: Array.isArray(fm.cons) ? fm.cons.map(String) : [],
+        analystView: String(fm.analystView || item.content || ""),
+      };
+    })
+    .filter((stock) => stock.status === "published")
+    .sort((a, b) => a.symbol.localeCompare(b.symbol));
 }
