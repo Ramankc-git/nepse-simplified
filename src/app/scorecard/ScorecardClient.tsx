@@ -22,6 +22,12 @@ import {
   Scale,
   Users,
   Coins,
+  Calendar,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  XCircle,
+  Star,
 } from "lucide-react";
 import {
   type ScorecardStock,
@@ -636,37 +642,87 @@ function CustomStockModal({
 
 // ==================== BENCHMARK GUIDE ====================
 
+const BENCHMARK_ITEMS = [
+  {
+    verdict: "Strong Buy" as Verdict,
+    range: "78% – 100%",
+    desc: "Exceptional fundamentals across all metrics. Strong conviction pick for long-term portfolios. These stocks demonstrate consistent outperformance and resilience in adverse conditions.",
+    icon: Star,
+    borderColor: "border-l-emerald-500",
+    bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
+    rangeColor: "text-emerald-700 dark:text-emerald-300",
+  },
+  {
+    verdict: "Buy" as Verdict,
+    range: "58% – 77%",
+    desc: "Above-average profile with manageable risks. Suitable for accumulation on dips. Fundamentals are sound, but there may be one or two areas that need monitoring.",
+    icon: CheckCircle2,
+    borderColor: "border-l-green-500",
+    bgColor: "bg-green-50 dark:bg-green-950/30",
+    iconColor: "text-green-600 dark:text-green-400",
+    rangeColor: "text-green-700 dark:text-green-300",
+  },
+  {
+    verdict: "Watchlist" as Verdict,
+    range: "45% – 57%",
+    desc: "Mixed signals — potential with significant caveats. Requires closer monitoring before committing capital. Some metrics are strong, but others raise concern.",
+    icon: AlertCircle,
+    borderColor: "border-l-amber-500",
+    bgColor: "bg-amber-50 dark:bg-amber-950/30",
+    iconColor: "text-amber-600 dark:text-amber-400",
+    rangeColor: "text-amber-700 dark:text-amber-300",
+  },
+  {
+    verdict: "Avoid" as Verdict,
+    range: "Below 45%",
+    desc: "Weak profile with multiple red flags. High risk, low conviction. Proceed with caution or stay away. Fundamental deterioration or governance issues may be present.",
+    icon: XCircle,
+    borderColor: "border-l-red-500",
+    bgColor: "bg-red-50 dark:bg-red-950/30",
+    iconColor: "text-red-600 dark:text-red-400",
+    rangeColor: "text-red-700 dark:text-red-300",
+  },
+];
+
 function BenchmarkGuide() {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-premium border border-slate-100 dark:border-slate-800 p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Target className="w-5 h-5 text-[#0a2141] dark:text-green-400" />
-        <h3 className="font-heading text-lg font-bold text-[#0a2141] dark:text-white">
-          Benchmark Guide
-        </h3>
+    <div className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-premium border border-slate-100 dark:border-slate-800 p-6 sm:p-8">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-2xl bg-[#0a2141]/5 dark:bg-white/10 flex items-center justify-center">
+          <Target className="w-5 h-5 text-[#0a2141] dark:text-green-400" />
+        </div>
+        <div>
+          <h3 className="font-heading text-xl font-bold text-[#0a2141] dark:text-white">
+            Benchmark Guide
+          </h3>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500">
+            How to interpret weighted scores
+          </p>
+        </div>
       </div>
-      <div className="space-y-3">
-        {[
-          { verdict: "Strong Buy" as Verdict, range: "78%+", desc: "Exceptional fundamentals across all metrics. Strong conviction pick for long-term portfolios." },
-          { verdict: "Buy" as Verdict, range: "58-77%", desc: "Above-average profile with manageable risks. Suitable for accumulation on dips." },
-          { verdict: "Watchlist" as Verdict, range: "45-57%", desc: "Mixed signals — potential with significant caveats. Requires closer monitoring." },
-          { verdict: "Avoid" as Verdict, range: "<45%", desc: "Weak profile with multiple red flags. High risk, low conviction. Proceed with caution." },
-        ].map((item) => (
-          <div
-            key={item.verdict}
-            className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800"
-          >
-            <VerdictBadge verdict={item.verdict} />
-            <div>
-              <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-0.5">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {BENCHMARK_ITEMS.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.verdict}
+              className={`rounded-2xl border-l-4 ${item.borderColor} ${item.bgColor} p-4`}
+            >
+              <div className="flex items-center gap-2.5 mb-2">
+                <Icon className={`w-5 h-5 ${item.iconColor}`} />
+                <VerdictBadge verdict={item.verdict} />
+              </div>
+              <p className={`text-sm font-bold ${item.rangeColor} mb-1`}>
                 {item.range}
               </p>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              <p className="text-[12px] text-slate-600 dark:text-slate-400 leading-relaxed">
                 {item.desc}
               </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -676,8 +732,10 @@ function BenchmarkGuide() {
 
 export default function ScorecardClient({
   initialStocks,
+  lastUpdated,
 }: {
   initialStocks: ScorecardStock[];
+  lastUpdated: string;
 }) {
   const [stocks, setStocks] = useState<ScorecardStock[]>(initialStocks);
   const [weights, setWeights] = useState<Record<ScorecardMetricKey, number>>({ ...DEFAULT_WEIGHTS });
@@ -748,6 +806,13 @@ export default function ScorecardClient({
           <p className="text-base sm:text-lg text-white/60 max-w-xl mx-auto leading-relaxed">
             Evaluate NEPSE-listed stocks using a weighted multi-factor scoring system. Adjust weights to match your investment strategy.
           </p>
+          {/* Last Updated Date Stamp */}
+          <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+            <Clock className="w-3.5 h-3.5 text-white/40" />
+            <span className="text-[11px] font-semibold text-white/50">
+              Data as of {lastUpdated}
+            </span>
+          </div>
         </div>
       </section>
 
@@ -815,9 +880,6 @@ export default function ScorecardClient({
                 onWeightChange={handleWeightChange}
                 onReset={handleResetWeights}
               />
-              <div className="mt-6">
-                <BenchmarkGuide />
-              </div>
             </div>
           </div>
 
@@ -829,9 +891,6 @@ export default function ScorecardClient({
                 onWeightChange={handleWeightChange}
                 onReset={handleResetWeights}
               />
-              <div className="mt-6">
-                <BenchmarkGuide />
-              </div>
             </div>
           )}
 
@@ -841,9 +900,15 @@ export default function ScorecardClient({
             <div className="bg-white dark:bg-slate-900 rounded-[2rem] shadow-premium border border-slate-100 dark:border-slate-800 overflow-hidden">
               <div className="p-5 border-b border-slate-100 dark:border-slate-800">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-heading text-lg font-bold text-[#0a2141] dark:text-white">
-                    Scored Stocks
-                  </h3>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-heading text-lg font-bold text-[#0a2141] dark:text-white">
+                      Scored Stocks
+                    </h3>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                      <Clock className="w-3 h-3" />
+                      {lastUpdated}
+                    </span>
+                  </div>
                   <span className="text-xs text-slate-400 dark:text-slate-500">
                     {filteredStocks.length} stock{filteredStocks.length !== 1 ? "s" : ""}
                   </span>
@@ -874,14 +939,12 @@ export default function ScorecardClient({
                 onClose={() => setSelectedStock(null)}
               />
             )}
-
-            {/* Mobile Benchmark Guide (shown when weights panel is closed) */}
-            {!showMobileWeights && (
-              <div className="lg:hidden">
-                <BenchmarkGuide />
-              </div>
-            )}
           </div>
+        </div>
+
+        {/* Benchmark Guide — Full Width Section */}
+        <div className="mt-12">
+          <BenchmarkGuide />
         </div>
       </section>
 
